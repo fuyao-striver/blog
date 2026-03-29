@@ -54,7 +54,11 @@ pub async fn create(pool: &PgPool, user: &NewUser) -> Result<User, sqlx::Error> 
     .await
 }
 
-pub async fn update(pool: &PgPool, id: i32, user: &UpdateUser) -> Result<Option<User>, sqlx::Error> {
+pub async fn update(
+    pool: &PgPool,
+    id: i32,
+    user: &UpdateUser,
+) -> Result<Option<User>, sqlx::Error> {
     let existing = find_by_id(pool, id).await?;
     if existing.is_none() {
         return Ok(None);

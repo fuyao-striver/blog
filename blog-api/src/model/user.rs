@@ -1,8 +1,8 @@
 //! 用户模型模块
-//! 
+//!
 //! 定义用户相关的数据结构
 
-use chrono::{DateTime, Utc};
+use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
@@ -43,11 +43,11 @@ pub struct User {
     /// 是否禁用（0: 正常, 1: 禁用）
     pub is_disable: i16,
     /// 最后登录时间
-    pub login_time: Option<DateTime<Utc>>,
+    pub login_time: Option<NaiveDateTime>,
     /// 创建时间
-    pub create_time: DateTime<Utc>,
+    pub create_time: NaiveDateTime,
     /// 更新时间
-    pub update_time: Option<DateTime<Utc>>,
+    pub update_time: Option<NaiveDateTime>,
 }
 
 /// 新用户（用于创建）
@@ -76,7 +76,7 @@ pub struct NewUser {
     /// 是否禁用
     pub is_disable: Option<i16>,
     /// 最后登录时间
-    pub login_time: Option<DateTime<Utc>>,
+    pub login_time: Option<NaiveDateTime>,
 }
 
 /// 用户更新（用于修改）
@@ -105,5 +105,5 @@ pub struct UpdateUser {
     /// 是否禁用
     pub is_disable: Option<i16>,
     /// 最后登录时间
-    pub login_time: Option<DateTime<Utc>>,
+    pub login_time: Option<NaiveDateTime>,
 }

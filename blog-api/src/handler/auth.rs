@@ -1,23 +1,20 @@
 //! 认证处理模块
-//! 
+//!
 //! 处理用户登录、登出等认证相关请求
 
 use std::sync::Arc;
 
-use argon2::{password_hash::PasswordHash, Argon2, PasswordVerifier};
-use axum::{
-    extract::State,
-    Json,
-};
+use argon2::{Argon2, PasswordVerifier, password_hash::PasswordHash};
+use axum::{Json, extract::State};
 
-use crate::{model::LoginForm, repository::user_repo, result::Result, utils::jwt, AppState};
+use crate::{AppState, model::LoginForm, repository::user_repo, result::Result, utils::jwt};
 
 /// 用户登录
-/// 
+///
 /// # 参数
 /// - `state`: 应用状态（包含数据库连接池）
 /// - `form`: 登录表单（用户名和密码）
-/// 
+///
 /// # 返回
 /// 成功返回JWT Token，失败返回错误信息
 pub async fn login(
@@ -74,7 +71,7 @@ pub async fn login(
 }
 
 /// 用户登出
-/// 
+///
 /// # 返回
 /// 成功返回退出成功消息
 pub async fn logout() -> Result<()> {

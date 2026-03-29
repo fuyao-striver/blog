@@ -1,5 +1,5 @@
-use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
+use sqlx::postgres::PgPoolOptions;
 use std::time::Duration;
 
 /// 数据库配置
@@ -21,8 +21,7 @@ impl DatabaseConfig {
     /// 从环境变量读取数据库配置
     pub fn from_env() -> Self {
         Self {
-            database_url: std::env::var("DATABASE_URL")
-                .expect("DATABASE_URL 必须设置"),
+            database_url: std::env::var("DATABASE_URL").expect("DATABASE_URL 必须设置"),
             max_connections: std::env::var("DB_MAX_CONNECTIONS")
                 .ok()
                 .and_then(|v| v.parse().ok())
