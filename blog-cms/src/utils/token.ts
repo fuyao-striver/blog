@@ -16,7 +16,7 @@ export function getToken() {
 export function setToken(token: string) {
   // 项目线上部署可以取消注释
   // return Cookies.set(TokenKey, token, { domain: domain });
-   return Cookies.set(TokenKey, token);
+  return Cookies.set(TokenKey, token);
 }
 
 export function removeToken() {

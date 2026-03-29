@@ -5,7 +5,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  font-family:
+    Helvetica Neue,
+    Helvetica,
+    PingFang SC,
+    Hiragino Sans GB,
+    Microsoft YaHei,
+    Arial,
+    sans-serif;
 }
 
 label {
@@ -88,7 +95,7 @@ div:focus {
   margin-top: 5px;
   border: 1px solid #e5e6e7;
   border-radius: 4px;
-  background: #FFFFFF none;
+  background: #ffffff none;
 }
 
 .picture-list .el-checkbox {
@@ -128,7 +135,6 @@ div:focus {
   background-color: var(--el-bg-color-overlay) !important;
 }
 
-
 // 自定义全局CSS变量
 :root {
   --menuBg: #304156;
@@ -146,10 +152,10 @@ html.dark {
   --menuBg: var(--el-bg-color-overlay);
   --menuText: var(----el-menu-text-color);
   --menuActiveText: var(--el-menu-active-color);
-  --menuHover: rgba(0, 0, 0, .2);
+  --menuHover: rgba(0, 0, 0, 0.2);
 
   --subMenuBg: var(--el-menu-bg-color);
   --subMenuActiveText: var(--el-menu-active-color);
-  --subMenuHover: rgba(0, 0, 0, .2);
+  --subMenuHover: rgba(0, 0, 0, 0.2);
   --talkBg: #000;
 }

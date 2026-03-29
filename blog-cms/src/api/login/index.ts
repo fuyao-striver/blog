@@ -14,7 +14,7 @@ export const login = (data: LoginForm): AxiosPromise<Result<string>> => {
     method: "post",
     data,
   });
-}
+};
 
 /**
  * 用户退出
@@ -24,4 +24,4 @@ export const logout = (): AxiosPromise<Result<null>> => {
     url: "/logout",
     method: "get",
   });
-}
+};
