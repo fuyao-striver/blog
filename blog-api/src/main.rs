@@ -1,9 +1,14 @@
-use axum::{routing::get, Router};
+use axum::{routing::{get, post}, Router};
 use sqlx::PgPool;
 use std::sync::Arc;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 mod db;
+mod handler;
+mod model;
+mod repository;
+mod result;
+mod utils;
 
 #[derive(Clone)]
 struct AppState {
@@ -33,6 +38,8 @@ async fn main() {
     let app = Router::new()
         .route("/", get(|| async { "Hello, World!" }))
         .route("/health", get(health_check))
+        .route("/login", post(handler::auth::login))
+        .route("/logout", get(handler::auth::logout))
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
