@@ -1,19 +1,22 @@
 {
   "version": "5",
   "specifiers": {
+    "npm:@element-plus/icons-vue@^2.3.2": "2.3.2_vue@3.5.31__typescript@5.9.3",
     "npm:@types/js-cookie@^3.0.6": "3.0.6",
     "npm:@types/node@^24.12.0": "24.12.0",
     "npm:@vitejs/plugin-vue@^6.0.5": "6.0.5_vite@8.0.3__@types+node@24.12.0__sass@1.98.0_vue@3.5.31__typescript@5.9.3_sass@1.98.0",
     "npm:@vue/tsconfig@0.9": "0.9.1_typescript@5.9.3_vue@3.5.31__typescript@5.9.3",
+    "npm:@vueuse/core@^14.2.1": "14.2.1_vue@3.5.31__typescript@5.9.3",
     "npm:axios@^1.14.0": "1.14.0",
     "npm:element-plus@^2.13.6": "2.13.6_vue@3.5.31__typescript@5.9.3",
     "npm:js-cookie@^3.0.5": "3.0.5",
     "npm:oxfmt@0.42": "0.42.0",
+    "npm:pinia-plugin-persistedstate@^4.7.1": "4.7.1_pinia@3.0.4__typescript@5.9.3__vue@3.5.31___typescript@5.9.3",
     "npm:pinia@^3.0.4": "3.0.4_typescript@5.9.3_vue@3.5.31__typescript@5.9.3",
     "npm:sass-loader@^16.0.7": "16.0.7_sass@1.98.0",
     "npm:sass@^1.98.0": "1.98.0",
     "npm:typescript@~5.9.3": "5.9.3",
-    "npm:unplugin-auto-import@21": "21.0.0",
+    "npm:unplugin-auto-import@21": "21.0.0_@vueuse+core@14.2.1__vue@3.5.31___typescript@5.9.3_vue@3.5.31__typescript@5.9.3",
     "npm:unplugin-vue-components@32": "32.0.0_vue@3.5.31__typescript@5.9.3",
     "npm:vite@^8.0.1": "8.0.3_@types+node@24.12.0_sass@1.98.0",
     "npm:vue-router@^5.0.4": "5.0.4_pinia@3.0.4__typescript@5.9.3__vue@3.5.31___typescript@5.9.3_vue@3.5.31__typescript@5.9.3_typescript@5.9.3",
@@ -434,6 +437,9 @@
     "@types/web-bluetooth@0.0.20": {
       "integrity": "sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow=="
     },
+    "@types/web-bluetooth@0.0.21": {
+      "integrity": "sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA=="
+    },
     "@vitejs/plugin-vue@6.0.5_vite@8.0.3__@types+node@24.12.0__sass@1.98.0_vue@3.5.31__typescript@5.9.3_sass@1.98.0": {
       "integrity": "sha512-bL3AxKuQySfk1iGcBsQnoRVexTPJq0Z/ixFVM8OhVJAP6ZXXXLtM7NFKWhLl30Kg7uTBqIaPXbh+nuQCuBDedg==",
       "dependencies": [
@@ -612,17 +618,35 @@
     "@vueuse/core@12.0.0": {
       "integrity": "sha512-C12RukhXiJCbx4MGhjmd/gH52TjJsc3G0E0kQj/kb19H3Nt6n1CA4DRWuTdWWcaFRdlTe0npWDS942mvacvNBw==",
       "dependencies": [
-        "@types/web-bluetooth",
-        "@vueuse/metadata",
-        "@vueuse/shared",
+        "@types/web-bluetooth@0.0.20",
+        "@vueuse/metadata@12.0.0",
+        "@vueuse/shared@12.0.0",
+        "vue"
+      ]
+    },
+    "@vueuse/core@14.2.1_vue@3.5.31__typescript@5.9.3": {
+      "integrity": "sha512-3vwDzV+GDUNpdegRY6kzpLm4Igptq+GA0QkJ3W61Iv27YWwW/ufSlOfgQIpN6FZRMG0mkaz4gglJRtq5SeJyIQ==",
+      "dependencies": [
+        "@types/web-bluetooth@0.0.21",
+        "@vueuse/metadata@14.2.1",
+        "@vueuse/shared@14.2.1_vue@3.5.31__typescript@5.9.3",
         "vue"
       ]
     },
     "@vueuse/metadata@12.0.0": {
       "integrity": "sha512-Yzimd1D3sjxTDOlF05HekU5aSGdKjxhuhRFHA7gDWLn57PRbBIh+SF5NmjhJ0WRgF3my7T8LBucyxdFJjIfRJQ=="
     },
+    "@vueuse/metadata@14.2.1": {
+      "integrity": "sha512-1ButlVtj5Sb/HDtIy1HFr1VqCP4G6Ypqt5MAo0lCgjokrk2mvQKsK2uuy0vqu/Ks+sHfuHo0B9Y9jn9xKdjZsw=="
+    },
     "@vueuse/shared@12.0.0": {
       "integrity": "sha512-3i6qtcq2PIio5i/vVYidkkcgvmTjCqrf26u+Fd4LhnbBmIT6FN8y6q/GJERp8lfcB9zVEfjdV0Br0443qZuJpw==",
+      "dependencies": [
+        "vue"
+      ]
+    },
+    "@vueuse/shared@14.2.1_vue@3.5.31__typescript@5.9.3": {
+      "integrity": "sha512-shTJncjV9JTI4oVNyF1FQonetYAiTBd+Qj7cY89SWbXSkx7gyhrgtEdF2ZAVWS1S3SHlaROO6F2IesJxQEkZBw==",
       "dependencies": [
         "vue"
       ]
@@ -708,6 +732,9 @@
     "dayjs@1.11.20": {
       "integrity": "sha512-YbwwqR/uYpeoP4pu043q+LTDLFBLApUP6VxRihdfNTqu4ubqMlGDLd6ErXhEgsyvY0K6nCs7nggYumAN+9uEuQ=="
     },
+    "defu@6.1.4": {
+      "integrity": "sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg=="
+    },
     "delayed-stream@1.0.0": {
       "integrity": "sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ=="
     },
@@ -731,7 +758,7 @@
         "@popperjs/core@npm:@sxzz/popperjs-es@2.11.8",
         "@types/lodash",
         "@types/lodash-es",
-        "@vueuse/core",
+        "@vueuse/core@12.0.0",
         "async-validator",
         "dayjs",
         "lodash",
@@ -1084,6 +1111,16 @@
     "picomatch@4.0.4": {
       "integrity": "sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A=="
     },
+    "pinia-plugin-persistedstate@4.7.1_pinia@3.0.4__typescript@5.9.3__vue@3.5.31___typescript@5.9.3": {
+      "integrity": "sha512-WHOqh2esDlR3eAaknPbqXrkkj0D24h8shrDPqysgCFR6ghqP/fpFfJmMPJp0gETHsvrh9YNNg6dQfo2OEtDnIQ==",
+      "dependencies": [
+        "defu",
+        "pinia"
+      ],
+      "optionalPeers": [
+        "pinia"
+      ]
+    },
     "pinia@3.0.4_typescript@5.9.3_vue@3.5.31__typescript@5.9.3": {
       "integrity": "sha512-l7pqLUFTI/+ESXn6k3nu30ZIzW5E2WZF/LaHJEpoq6ElcLD+wduZoB2kBN19du6K/4FDpPMazY2wJr+IndBtQw==",
       "dependencies": [
@@ -1244,15 +1281,19 @@
         "unplugin-utils"
       ]
     },
-    "unplugin-auto-import@21.0.0": {
+    "unplugin-auto-import@21.0.0_@vueuse+core@14.2.1__vue@3.5.31___typescript@5.9.3_vue@3.5.31__typescript@5.9.3": {
       "integrity": "sha512-vWuC8SwqJmxZFYwPojhOhOXDb5xFhNNcEVb9K/RFkyk/3VnfaOjzitWN7v+8DEKpMjSsY2AEGXNgt6I0yQrhRQ==",
       "dependencies": [
+        "@vueuse/core@14.2.1_vue@3.5.31__typescript@5.9.3",
         "local-pkg",
         "magic-string",
         "picomatch",
         "unimport",
         "unplugin@2.3.11",
         "unplugin-utils"
+      ],
+      "optionalPeers": [
+        "@vueuse/core@14.2.1_vue@3.5.31__typescript@5.9.3"
       ]
     },
     "unplugin-utils@0.3.1": {
@@ -1381,14 +1422,17 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
+        "npm:@element-plus/icons-vue@^2.3.2",
         "npm:@types/js-cookie@^3.0.6",
         "npm:@types/node@^24.12.0",
         "npm:@vitejs/plugin-vue@^6.0.5",
         "npm:@vue/tsconfig@0.9",
+        "npm:@vueuse/core@^14.2.1",
         "npm:axios@^1.14.0",
         "npm:element-plus@^2.13.6",
         "npm:js-cookie@^3.0.5",
         "npm:oxfmt@0.42",
+        "npm:pinia-plugin-persistedstate@^4.7.1",
         "npm:pinia@^3.0.4",
         "npm:sass-loader@^16.0.7",
         "npm:sass@^1.98.0",
