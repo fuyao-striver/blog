@@ -5,7 +5,8 @@ import { createPinia } from "pinia";
 import "@/assets/styles/index.scss";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
-
+import SvgIcon from "@/components/SvgIcon/index.vue";
+import "virtual:svg-icons-register";
 const app = createApp(App);
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
@@ -17,4 +18,5 @@ pinia.use(piniaPluginPersistedstate);
 
 app.use(router);
 app.use(pinia);
+app.component('svg-icon', SvgIcon);
 app.mount("#app");
