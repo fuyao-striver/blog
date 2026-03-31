@@ -2,9 +2,7 @@
   <el-breadcrumb class="app-breadcrumb" separator="/">
     <transition-group name="breadcrumb">
       <el-breadcrumb-item v-for="(item, index) in breadcrumbList" :key="item.path">
-        <span v-if="item.redirect === 'noRedirect' || index == breadcrumbList.length - 1" class="no-redirect">{{
-            item.meta.title
-        }}</span>
+        <span v-if="item.redirect === 'noRedirect' || index == breadcrumbList.length - 1" class="no-redirect">{{ item.meta.title }}</span>
         <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
       </el-breadcrumb-item>
     </transition-group>
@@ -12,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import router from '@/router';
+import router from "@/router";
 import { onBeforeMount, ref, watch } from "vue";
 import { type RouteLocationMatched, useRoute } from "vue-router";
 
@@ -26,15 +24,15 @@ const getBreadCrumb = () => {
     // 添加首页进去
     matched = [{ path: "/index", meta: { title: "首页" } } as any].concat(matched);
   }
-  breadcrumbList.value = matched.filter(item => item.meta && item.meta.title);
-}
+  breadcrumbList.value = matched.filter((item) => item.meta && item.meta.title);
+};
 
 const isDashboard = (route: RouteLocationMatched) => {
   const name = route && route.name;
   if (!name) {
     return false;
   }
-  return name.toString().trim() === 'Index';
+  return name.toString().trim() === "Index";
 };
 const handleLink = (item: any) => {
   const { redirect, path } = item;
@@ -46,8 +44,8 @@ const handleLink = (item: any) => {
 };
 watch(
   () => currentRoute.path,
-  path => {
-    if (path.startsWith('/redirect/')) {
+  (path) => {
+    if (path.startsWith("/redirect/")) {
       return;
     }
     getBreadCrumb();
@@ -76,4 +74,3 @@ onBeforeMount(() => {
   }
 }
 </style>
-

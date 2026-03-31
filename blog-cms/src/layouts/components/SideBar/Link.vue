@@ -5,20 +5,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from "vue";
 const props = defineProps({
   to: {
     type: [String, Object],
-    required: true
-  }
+    required: true,
+  },
 });
 const type = computed(() => {
-  return 'router-link'
+  return "router-link";
 });
 
 const linkProps = () => {
   return {
-    to: props.to
-  }
-}
+    to: props.to,
+  };
+};
 </script>

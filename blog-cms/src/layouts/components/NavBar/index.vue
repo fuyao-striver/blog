@@ -51,8 +51,8 @@
 import breadcrumb from "@/components/Breadcrumb/index.vue";
 import hamburger from "@/components/Hamburger/index.vue";
 import password from "@/components/Password/index.vue";
-import Screenfull from '@/components/Screenfull/index.vue';
-import SizeSelect from '@/components/SizeSelect/index.vue';
+import Screenfull from "@/components/Screenfull/index.vue";
+import SizeSelect from "@/components/SizeSelect/index.vue";
 import useStore from "@/store";
 import { messageConfirm } from "@/utils/modal";
 import { computed } from "vue";
@@ -74,15 +74,17 @@ const handleCommand = (command: string) => {
   }
 };
 const logout = () => {
-  messageConfirm("确定注销并退出系统吗？").then(() => {
-    user.LogOut().then(() => {
-      location.href = "/login";
-    });
-  }).catch(() => { });
+  messageConfirm("确定注销并退出系统吗？")
+    .then(() => {
+      user.LogOut().then(() => {
+        location.href = "/login";
+      });
+    })
+    .catch(() => {});
 };
-const emits = defineEmits(['setLayout']);
+const emits = defineEmits(["setLayout"]);
 const setLayout = () => {
-  emits('setLayout');
+  emits("setLayout");
 };
 </script>
 

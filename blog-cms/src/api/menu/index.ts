@@ -13,7 +13,7 @@ export const getUserMenu = (): AxiosPromise<Result<RouteRecordRaw[]>> => {
     url: "/admin/user/getUserMenu",
     method: "get",
   });
-}
+};
 
 /**
  * 获取菜单树
@@ -24,7 +24,7 @@ export const getMenuTree = (): AxiosPromise<Result<MenuTree[]>> => {
     url: "/admin/menu/getMenuTree",
     method: "get",
   });
-}
+};
 
 /**
  * 获取菜单下拉树
@@ -35,7 +35,7 @@ export const getMenuOptions = (): AxiosPromise<Result<MenuOption[]>> => {
     url: "/admin/menu/getMenuOptions",
     method: "get",
   });
-}
+};
 
 /**
  * 查看菜单列表
@@ -48,7 +48,7 @@ export const getMenuList = (params: MenuQuery): AxiosPromise<Result<Menu[]>> => 
     method: "get",
     params,
   });
-}
+};
 
 /**
  * 编辑菜单
@@ -60,7 +60,7 @@ export const editMenu = (menuId: number): AxiosPromise<Result<MenuForm>> => {
     url: `/admin/menu/edit/${menuId}`,
     method: "get",
   });
-}
+};
 
 /**
  * 添加菜单
@@ -72,7 +72,7 @@ export const addMenu = (data: MenuForm): AxiosPromise<Result<null>> => {
     method: "post",
     data,
   });
-}
+};
 
 /**
  * 修改菜单
@@ -84,7 +84,7 @@ export const updateMenu = (data: MenuForm): AxiosPromise<Result<null>> => {
     method: "put",
     data,
   });
-}
+};
 
 /**
  * 删除菜单
@@ -95,4 +95,4 @@ export const deleteMenu = (menuId: number): AxiosPromise<Result<null>> => {
     url: `/admin/menu/delete/${menuId}`,
     method: "delete",
   });
-}
+};

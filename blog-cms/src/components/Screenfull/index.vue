@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-import SvgIcon from '@/components/SvgIcon/index.vue';
-import { useFullscreen } from '@vueuse/core';
+import SvgIcon from "@/components/SvgIcon/index.vue";
+import { useFullscreen } from "@vueuse/core";
 
 const { isFullscreen, toggle } = useFullscreen();
 </script>

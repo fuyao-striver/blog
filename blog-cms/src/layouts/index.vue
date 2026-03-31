@@ -60,8 +60,8 @@ const setLayout = () => {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/styles/mixin.scss";
-@import "@/assets/styles/variables.module.scss";
+@use "@/assets/styles/mixin.scss" as *;
+@use "@/assets/styles/variables.module.scss" as *;
 
 .app-wrapper {
   @include clearfix;

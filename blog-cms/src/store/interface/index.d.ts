@@ -22,7 +22,6 @@ export interface UserState {
   permissionList: string[];
 }
 
-
 /**
  * 设置
  */
@@ -76,4 +75,3 @@ export interface AppState {
    */
   size: string;
 }
-
