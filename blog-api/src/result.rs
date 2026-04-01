@@ -4,11 +4,16 @@ use axum::{
 };
 use serde::Serialize;
 
-#[derive(Serialize)]
+/// 统一响应结果结构
+#[derive(Serialize, Debug)]
 pub struct Result<T> {
+    /// 是否成功
     pub flag: bool,
+    /// 状态码
     pub code: i32,
+    /// 消息
     pub msg: String,
+    /// 数据
     pub data: Option<T>,
 }
 

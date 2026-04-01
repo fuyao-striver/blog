@@ -28,19 +28,51 @@ pub async fn get_user_info(
     auth: AuthUser,
     State(state): State<Arc<AppState>>,
 ) -> Result<UserInfoVO> {
+    let start = std::time::Instant::now();
+    
+    // 记录请求日志
+    tracing::info!(
+        path = "/api/user/info",
+        method = "GET",
+        user_id = auth.user_id,
+        "获取用户信息请求"
+    );
+
     // 查询用户基本信息
     let user = match user_repo::find_by_id(&state.db, auth.user_id).await {
         Ok(u) => u,
         Err(e) => {
             tracing::error!("查询用户信息失败: {}", e);
-            return Result::fail(500, "服务器内部错误");
+            let response = Result::<UserInfoVO>::fail(500, "服务器内部错误");
+            tracing::info!(
+                path = "/api/user/info",
+                method = "GET",
+                status = 500,
+                success = false,
+                response = ?response,
+                elapsed_ms = start.elapsed().as_millis(),
+                "获取用户信息失败"
+            );
+            return response;
         }
     };
 
     // 检查用户是否存在
     let user = match user {
         Some(u) => u,
-        None => return Result::fail(404, "用户不存在"),
+        None => {
+            let response = Result::<UserInfoVO>::fail(404, "用户不存在");
+            tracing::info!(
+                path = "/api/user/info",
+                method = "GET",
+                status = 404,
+                success = false,
+                response = ?response,
+                elapsed_ms = start.elapsed().as_millis(),
+                "获取用户信息失败：用户不存在"
+            );
+            return response;
+        }
     };
 
     // 查询用户的角色列表（通过 t_user_role 关联表）
@@ -48,7 +80,17 @@ pub async fn get_user_info(
         Ok(r) => r,
         Err(e) => {
             tracing::error!("查询用户角色失败: {}", e);
-            return Result::fail(500, "服务器内部错误");
+            let response = Result::<UserInfoVO>::fail(500, "服务器内部错误");
+            tracing::info!(
+                path = "/api/user/info",
+                method = "GET",
+                status = 500,
+                success = false,
+                response = ?response,
+                elapsed_ms = start.elapsed().as_millis(),
+                "获取用户信息失败"
+            );
+            return response;
         }
     };
 
@@ -57,15 +99,38 @@ pub async fn get_user_info(
         Ok(p) => p,
         Err(e) => {
             tracing::error!("查询用户权限失败: {}", e);
-            return Result::fail(500, "服务器内部错误");
+            let response = Result::<UserInfoVO>::fail(500, "服务器内部错误");
+            tracing::info!(
+                path = "/api/user/info",
+                method = "GET",
+                status = 500,
+                success = false,
+                response = ?response,
+                elapsed_ms = start.elapsed().as_millis(),
+                "获取用户信息失败"
+            );
+            return response;
         }
     };
 
     // 构建并返回用户信息VO
-    Result::success(UserInfoVO {
+    let response = Result::success(UserInfoVO {
         id: user.id,
         avatar: user.avatar,
         role_list,
         permission_list,
-    })
+    });
+    
+    // 记录响应日志
+    tracing::info!(
+        path = "/api/user/info",
+        method = "GET",
+        status = 200,
+        success = true,
+        response = ?response,
+        elapsed_ms = start.elapsed().as_millis(),
+        "获取用户信息成功"
+    );
+    
+    response
 }
