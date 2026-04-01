@@ -4,6 +4,7 @@
     "npm:@element-plus/icons-vue@^2.3.2": "2.3.2_vue@3.5.31__typescript@5.9.3",
     "npm:@types/js-cookie@^3.0.6": "3.0.6",
     "npm:@types/node@^24.12.0": "24.12.0",
+    "npm:@types/nprogress@~0.2.3": "0.2.3",
     "npm:@vitejs/plugin-vue@^6.0.5": "6.0.5_vite@8.0.3__@types+node@24.12.0__sass@1.98.0_vue@3.5.31__typescript@5.9.3_sass@1.98.0",
     "npm:@vue/tsconfig@0.9": "0.9.1_typescript@5.9.3_vue@3.5.31__typescript@5.9.3",
     "npm:@vueuse/core@^14.2.1": "14.2.1_vue@3.5.31__typescript@5.9.3",
@@ -11,6 +12,7 @@
     "npm:element-plus@^2.13.6": "2.13.6_vue@3.5.31__typescript@5.9.3",
     "npm:fast-glob@^3.3.3": "3.3.3",
     "npm:js-cookie@^3.0.5": "3.0.5",
+    "npm:nprogress@0.2": "0.2.0",
     "npm:oxfmt@0.42": "0.42.0",
     "npm:pinia-plugin-persistedstate@^4.7.1": "4.7.1_pinia@3.0.4__typescript@5.9.3__vue@3.5.31___typescript@5.9.3",
     "npm:pinia@^3.0.4": "3.0.4_typescript@5.9.3_vue@3.5.31__typescript@5.9.3",
@@ -452,6 +454,9 @@
       "dependencies": [
         "undici-types"
       ]
+    },
+    "@types/nprogress@0.2.3": {
+      "integrity": "sha512-k7kRA033QNtC+gLc4VPlfnue58CM1iQLgn1IMAU8VPHGOj7oIHPp9UlhedEnD/Gl8evoCjwkZjlBORtZ3JByUA=="
     },
     "@types/svgo@2.6.4": {
       "integrity": "sha512-l4cmyPEckf8moNYHdJ+4wkHvFxjyW6ulm9l4YGaOxeyBWPhBOT0gvni1InpFPdzx1dKf/2s62qGITwxNWnPQng==",
@@ -2033,6 +2038,9 @@
     "normalize-wheel-es@1.2.0": {
       "integrity": "sha512-Wj7+EJQ8mSuXr2iWfnujrimU35R2W4FAErEyTmJoJ7ucwTn2hOUSsRehMb5RSYkxXGTM7Y9QpvPmp++w5ftoJw=="
     },
+    "nprogress@0.2.0": {
+      "integrity": "sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA=="
+    },
     "nth-check@2.1.1": {
       "integrity": "sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==",
       "dependencies": [
@@ -3043,6 +3051,7 @@
         "npm:@element-plus/icons-vue@^2.3.2",
         "npm:@types/js-cookie@^3.0.6",
         "npm:@types/node@^24.12.0",
+        "npm:@types/nprogress@~0.2.3",
         "npm:@vitejs/plugin-vue@^6.0.5",
         "npm:@vue/tsconfig@0.9",
         "npm:@vueuse/core@^14.2.1",
@@ -3050,6 +3059,7 @@
         "npm:element-plus@^2.13.6",
         "npm:fast-glob@^3.3.3",
         "npm:js-cookie@^3.0.5",
+        "npm:nprogress@0.2",
         "npm:oxfmt@0.42",
         "npm:pinia-plugin-persistedstate@^4.7.1",
         "npm:pinia@^3.0.4",

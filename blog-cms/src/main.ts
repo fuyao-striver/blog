@@ -7,6 +7,8 @@ import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import "virtual:svg-icons-register";
+import "./permission";
+
 const app = createApp(App);
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
