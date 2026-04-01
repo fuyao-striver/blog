@@ -43,6 +43,7 @@ async fn main() {
         .route("/health", get(health_check))
         .route("/login", post(handler::auth::login))
         .route("/logout", get(handler::auth::logout))
+        .route("/admin/user/getUserInfo", get(handler::user::get_user_info))
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
