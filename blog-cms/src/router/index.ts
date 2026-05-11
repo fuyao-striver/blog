@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
 import Layouts from "@/layouts/index.vue";
 
-const constantRoutes: RouteRecordRaw[] = [
+export const constantRoutes: RouteRecordRaw[] = [
   {
     path: "/:pathMatch(.*)*",
     component: () => import("@/views/error/404.vue"),

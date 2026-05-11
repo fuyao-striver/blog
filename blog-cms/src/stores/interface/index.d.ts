@@ -1,3 +1,12 @@
+import { RouteLocationNormalized, RouteRecordRaw } from "vue-router";
+
+export interface TagView extends Partial<RouteLocationNormalized> {
+  title?: string;
+}
+
+export interface TagViewState {
+  visitedViews: TagView[];
+}
 /**
  * 用户
  */
@@ -54,4 +63,14 @@ export interface SettingState {
    * 是否显示Logo
    */
   sidebarLogo: boolean;
+}
+
+/**
+ * 权限
+ */
+export interface PermissionState {
+  /**
+   * 路由
+   */
+  routes: RouteRecordRaw[];
 }

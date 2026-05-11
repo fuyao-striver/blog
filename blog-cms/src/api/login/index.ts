@@ -8,7 +8,7 @@ import type { Result } from "@/modal";
  * @param data 登录信息
  * @returns Token
  */
-export function login(data: LoginForm): AxiosPromise<Result<string>> {
+export const login = (data: LoginForm): AxiosPromise<Result<string>> => {
   return request({
     url: "/login",
     method: "post",
@@ -19,7 +19,7 @@ export function login(data: LoginForm): AxiosPromise<Result<string>> {
 /**
  * 用户退出
  */
-export function logout(): AxiosPromise<Result<null>> {
+export const logout = (): AxiosPromise<Result<null>> =>{
   return request({
     url: "/logout",
     method: "get",

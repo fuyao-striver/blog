@@ -3,6 +3,7 @@ import type { UserState } from "@/stores/interface";
 import { login, logout } from "@/api/login";
 import { removeToken, setToken } from "@/utils/token.ts";
 import type { LoginForm } from "@/api/login/types";
+import {getUserInfo} from "@/api/user";
 
 const useUserStore = defineStore("useUserStore", {
   state: (): UserState => ({
@@ -38,6 +39,23 @@ const useUserStore = defineStore("useUserStore", {
             this.permissionList = [];
             removeToken();
             resolve(null);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    GetInfo() {
+      return new Promise((resolve, reject) => {
+        getUserInfo()
+          .then(({ data }) => {
+            if (data.flag) {
+              this.id = data.data.id;
+              this.avatar = data.data.avatar;
+              this.roleList = data.data.roleList;
+              this.permissionList = data.data.permissionList;
+            }
+            resolve(data);
           })
           .catch((error) => {
             reject(error);
