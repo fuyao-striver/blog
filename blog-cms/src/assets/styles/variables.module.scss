@@ -1,0 +1,16 @@
+// 全局SCSS变量
+$menuBg: var(--menuBg);
+$menuText: var(--menuText);
+$menuActiveText: var(--menuActiveText);
+$menuHover: var(--menuHover);
+
+$subMenuBg: var(--subMenuBg);
+$subMenuActiveText: var(--subMenuActiveText);
+$subMenuHover: var(--subMenuHover);
+$sideBarWidth: 200px;
+
+:export {
+  menuBg: $menuBg;
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+}
