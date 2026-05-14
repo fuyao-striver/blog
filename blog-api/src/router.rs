@@ -5,7 +5,10 @@ use axum::{
 
 use crate::{
     AppState,
-    handler::{login::login, user::get_user_back_info},
+    handler::{
+        login::login,
+        user::{get_user_back_info, get_user_menu},
+    },
     utils::middle::auth_middleware,
 };
 
@@ -17,5 +20,6 @@ pub fn login_routes() -> Router<AppState> {
 pub fn user_routers() -> Router<AppState> {
     Router::new()
         .route("/admin/user/getUserInfo", get(get_user_back_info))
+        .route("/admin/user/getUserMenu", get(get_user_menu))
         .route_layer(middleware::from_fn(auth_middleware))
 }
