@@ -2,16 +2,17 @@ mod entity;
 mod error;
 mod handler;
 mod modal;
+mod registry;
 mod repo;
 mod router;
 mod service;
 mod utils;
 
+use crate::registry::AppRegistry;
 use crate::router::{login_routes, user_routers};
 use crate::service::user::UserService;
 use crate::utils::sql::connect_postgres;
 use axum::Router;
-use sqlx::PgPool;
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
@@ -23,9 +24,9 @@ struct AppState {
 }
 
 impl AppState {
-    pub fn new(db: PgPool) -> Self {
+    pub fn new(registry: &AppRegistry) -> Self {
         Self {
-            user_service: UserService::new(db),
+            user_service: UserService::new(registry),
         }
     }
 }
@@ -41,7 +42,8 @@ async fn main() {
         .with(EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info")))
         .init();
     let pool = connect_postgres(DATABASE_URL).await;
-    let state = AppState::new(pool);
+    let registry = AppRegistry::new(&pool);
+    let state = AppState::new(&registry);
     let app = Router::new()
         .merge(login_routes())
         .merge(user_routers())

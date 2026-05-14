@@ -9,7 +9,7 @@ impl MenuRepo {
         Self { db }
     }
 
-    pub async fn get_permission_by_role_id(&self, id: i32) -> anyhow::Result<Vec<String>> {
+    pub async fn get_permission_by_role_id(&self, id: &str) -> anyhow::Result<Vec<String>> {
         let permission_list = sqlx::query_scalar(
             r#"
             SELECT DISTINCT m.perms
@@ -18,7 +18,7 @@ impl MenuRepo {
             WHERE rm.role_id = $1
               AND m.is_disable = 0"#,
         )
-        .bind(id.to_string())
+        .bind(id)
         .fetch_all(&self.db)
         .await?;
         Ok(permission_list)

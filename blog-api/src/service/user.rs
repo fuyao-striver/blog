@@ -1,11 +1,12 @@
 use std::sync::Arc;
 
 use anyhow::anyhow;
+use futures::future::join_all;
 use itertools::Itertools;
-use sqlx::PgPool;
 
 use crate::{
     modal::{request::login::LoginRequest, response::user_back::UserBackInfoResp},
+    registry::AppRegistry,
     repo::{menu::MenuRepo, role::RoleRepo, user::UserRepo},
     utils::{jwt::create_token, password::verify_password},
 };
@@ -18,11 +19,11 @@ pub struct UserService {
 }
 
 impl UserService {
-    pub fn new(db: PgPool) -> Self {
+    pub fn new(registry: &AppRegistry) -> Self {
         Self {
-            user_repo: Arc::new(UserRepo::new(db.clone())),
-            menu_repo: Arc::new(MenuRepo::new(db.clone())),
-            role_repo: Arc::new(RoleRepo::new(db)),
+            user_repo: Arc::clone(&registry.user_repo),
+            role_repo: Arc::clone(&registry.role_repo),
+            menu_repo: Arc::clone(&registry.menu_repo),
         }
     }
 
@@ -47,15 +48,24 @@ impl UserService {
             .await?
             .ok_or_else(|| anyhow!("用户{}不存在", id))?;
         let role_list = self.role_repo.get_role_list_by_id(id).await?;
-        let permission_list: Vec<String> = self
-            .menu_repo
-            .get_permission_by_role_id(id)
-            .await?
+
+        // 并发查询所有角色的权限
+        let futures: Vec<_> = role_list
             .iter()
-            .filter(|value| !value.is_empty())
-            .unique()
-            .cloned()
+            .map(|role_id| self.menu_repo.get_permission_by_role_id(role_id))
             .collect();
+
+        let results = join_all(futures).await;
+
+        // 合并所有权限，去重，过滤空字符串
+        let permission_list: Vec<String> = results
+            .into_iter()
+            .filter_map(|r| r.ok()) // 处理 Result，忽略错误的
+            .flatten() // 展开 Vec<Vec<String>> -> Vec<String>
+            .filter(|s| !s.is_empty())
+            .unique()
+            .collect();
+
         Ok(UserBackInfoResp {
             id,
             avatar: user.avatar,
