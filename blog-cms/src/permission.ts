@@ -23,7 +23,7 @@ router.beforeEach(async (to, _from) => {
   if (getToken()) {
     if (to.path === "/login") {
       NProgress.done();
-      return { path: "/" };  // 已登录，跳转首页
+      return { path: "/" }; // 已登录，跳转首页
     }
 
     if (user.roleList.length === 0) {
@@ -55,11 +55,11 @@ router.beforeEach(async (to, _from) => {
 
   // 未登录
   if (whiteList.indexOf(to.path) !== -1) {
-    return true;  // 白名单放行
+    return true; // 白名单放行
   }
 
   NProgress.done();
-  return `/login?redirect=${to.path}`;  // 重定向到登录页
+  return `/login?redirect=${to.path}`; // 重定向到登录页
 });
 
 router.afterEach(() => {
