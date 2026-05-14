@@ -98,7 +98,7 @@ impl UserService {
                 meta: Some(MetaResp {
                     title: menu.menu_name.clone(),
                     icon: menu.icon.clone(),
-                    hidden: menu.is_hidden == true,
+                    hidden: menu.is_hidden,
                 }),
                 children: None,
                 always_show: None,
@@ -123,7 +123,7 @@ impl UserService {
                     meta: Some(MetaResp {
                         title: menu.menu_name.clone(),
                         icon: menu.icon.clone(),
-                        hidden: menu.is_hidden == true,
+                        hidden: menu.is_hidden,
                     }),
                     children: None,
                     always_show: None,
@@ -161,19 +161,15 @@ impl UserService {
 
     // 获取组件信息
     fn get_component(&self, menu: &UserMenuResp) -> String {
-        let component = common_constant::LAYOUT.to_string();
+        // 外部链接 / 菜单框架
+        if self.is_menu_frame(menu) {
+            return common_constant::LAYOUT.to_string();
+        }
 
-        if menu.component.is_some()
-            && !menu.component.as_ref().unwrap().is_empty()
-            && !self.is_menu_frame(menu)
-        {
-            menu.component.clone().unwrap()
-        } else if (menu.component.is_none() || menu.component.as_ref().unwrap().is_empty())
-            && self.is_parent_view(menu)
-        {
-            common_constant::PARENT_VIEW.to_string()
-        } else {
-            component
+        match &menu.component {
+            Some(comp) if !comp.is_empty() => comp.clone(),
+            _ if self.is_parent_view(menu) => common_constant::PARENT_VIEW.to_string(),
+            _ => common_constant::LAYOUT.to_string(),
         }
     }
 

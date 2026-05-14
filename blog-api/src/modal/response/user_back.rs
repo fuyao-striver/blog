@@ -19,6 +19,7 @@ pub struct UserMenuResp {
     pub menu_type: String,
     pub path: Option<String>,
     pub icon: Option<String>,
+    pub order_num: Option<i32>,
     pub component: Option<String>,
     pub is_hidden: bool,
 }

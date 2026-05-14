@@ -9,6 +9,7 @@ argon2 = "0.5.3"
 axum = {version="0.8.9",features=["macros"]}
 chrono = { version = "0.4.44",features=["serde"]}
 futures = "0.3.32"
+http-body-util = "0.1"
 itertools = "0.14.0"
 jsonwebtoken = {version = "10.3.0",features = ["rust_crypto"]}
 serde = "1.0.228"
@@ -18,4 +19,4 @@ thiserror = "2.0.18"
 tokio = { version = "1.52.3", features = ["rt", "rt-multi-thread", "macros"] }
 tower-http = { version = "0.6.10",features = ["trace"] }
 tracing = "0.1.44"
-tracing-subscriber = { version = "0.3.23",features = ["env-filter"] }
+tracing-subscriber = { version = "0.3.23",features = ["env-filter","tracing-log"] }
