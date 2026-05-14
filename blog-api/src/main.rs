@@ -3,12 +3,11 @@ mod error;
 mod handler;
 mod modal;
 mod repo;
-mod request;
 mod router;
 mod service;
 mod utils;
 
-use crate::router::login_routes;
+use crate::router::{login_routes, user_routers};
 use crate::service::user::UserService;
 use crate::utils::sql::connect_postgres;
 use axum::Router;
@@ -45,6 +44,7 @@ async fn main() {
     let state = AppState::new(pool);
     let app = Router::new()
         .merge(login_routes())
+        .merge(user_routers())
         .layer(TraceLayer::new_for_http())
         .with_state(state);
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8080").await.unwrap();

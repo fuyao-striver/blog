@@ -1,7 +1,9 @@
 use axum::{Json, extract::State};
 
 use crate::{
-    AppState, error::AppError, modal::api_result::ApiResponse, request::login::LoginRequest,
+    AppState,
+    error::AppError,
+    modal::{api_result::ApiResponse, request::login::LoginRequest},
 };
 
 #[axum::debug_handler]

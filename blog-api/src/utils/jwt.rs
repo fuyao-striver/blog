@@ -1,4 +1,4 @@
-use chrono::{Duration, Local};
+use chrono::{Duration, Local, Utc};
 use jsonwebtoken::{EncodingKey, Header, encode};
 use serde::{Deserialize, Serialize};
 
@@ -7,6 +7,14 @@ pub struct Claims {
     pub sub: i32,   // 用户ID
     pub exp: usize, // 过期时间
     pub iat: usize, // 签发时间
+}
+
+impl Claims {
+    // 检查是否过期
+    pub fn is_expired(&self) -> bool {
+        let now = Utc::now().timestamp() as usize;
+        self.exp < now
+    }
 }
 
 const SECRET: &[u8] = b"651908384@qq.com";

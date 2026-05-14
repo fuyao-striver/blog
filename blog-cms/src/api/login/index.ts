@@ -14,14 +14,14 @@ export const login = (data: LoginForm): AxiosPromise<Result<string>> => {
     method: "post",
     data,
   });
-}
+};
 
 /**
  * 用户退出
  */
-export const logout = (): AxiosPromise<Result<null>> =>{
+export const logout = (): AxiosPromise<Result<null>> => {
   return request({
     url: "/logout",
     method: "get",
   });
-}
+};

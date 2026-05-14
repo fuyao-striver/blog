@@ -3,7 +3,7 @@ import type { UserState } from "@/stores/interface";
 import { login, logout } from "@/api/login";
 import { removeToken, setToken } from "@/utils/token.ts";
 import type { LoginForm } from "@/api/login/types";
-import {getUserInfo} from "@/api/user";
+import { getUserInfo } from "@/api/user";
 
 const useUserStore = defineStore("useUserStore", {
   state: (): UserState => ({
