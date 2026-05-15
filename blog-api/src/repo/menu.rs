@@ -1,6 +1,6 @@
 use sqlx::PgPool;
 
-use crate::modal::response::user_back::UserMenuResp;
+use crate::{constant::common_constant, modal::response::user_back::UserMenuResp};
 
 pub struct MenuRepo {
     db: PgPool,
@@ -28,7 +28,8 @@ impl MenuRepo {
 
     pub async fn get_menu_by_user_id(&self, id: i32) -> anyhow::Result<Vec<UserMenuResp>> {
         let menu_list = sqlx::query_as::<_, UserMenuResp>(
-            r#"SELECT DISTINCT m.id,
+            format!(
+                r#"SELECT DISTINCT m.id,
                         m.parent_id,
                         m.menu_name,
                         m.menu_type,
@@ -41,11 +42,15 @@ impl MenuRepo {
                  INNER JOIN t_role_menu rm ON m.id = rm.menu_id
                  INNER JOIN t_user_role ur ON rm.role_id = ur.role_id
                  INNER JOIN t_role r ON ur.role_id = r.id
-        WHERE m.menu_type in ('M', 'C')
+        WHERE m.menu_type in ('{}', '{}')
           AND m.is_disable = false
           AND r.is_disable = false
           AND ur.user_id = $1
         ORDER BY m.parent_id, m.order_num"#,
+                common_constant::MENU_TYPE_DIR,
+                common_constant::MENU_TYPE_PAGE
+            )
+            .as_str(),
         )
         .bind(id)
         .fetch_all(&self.db)

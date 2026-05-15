@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
 
 use anyhow::anyhow;
 use futures::future::join_all;
@@ -36,16 +36,35 @@ impl UserService {
 
     /// 登录方法
     pub async fn login(&self, login_request: LoginRequest) -> anyhow::Result<String> {
+        let t0 = std::time::Instant::now();
+
+        // 1. 数据库查询用户
         let user = self
             .user_repo
             .get_user(&login_request.username)
             .await?
             .ok_or_else(|| anyhow!("用户 {} 不存在", login_request.username))?;
-        anyhow::ensure!(
-            verify_password(&login_request.password, &user.password)?,
-            "密码不正确，请重新输入密码！"
+        tracing::debug!(
+            username = %login_request.username,
+            db_us = t0.elapsed().as_micros(),
+            "DB 查询用户完成"
         );
-        create_token(user.id)
+
+        // 2. 密码验证（CPU 密集型，放入 blocking 线程池避免阻塞 async runtime）
+        let t1 = std::time::Instant::now();
+        let password_input = login_request.password.clone();
+        let password_hash = user.password.clone();
+        let valid =
+            tokio::task::spawn_blocking(move || verify_password(&password_input, &password_hash))
+                .await
+                .map_err(|e| anyhow!("密码验证任务异常: {}", e))??;
+        tracing::debug!(argon2_us = t1.elapsed().as_micros(), "Argon2 密码验证完成");
+        anyhow::ensure!(valid, "密码不正确，请重新输入密码！");
+
+        // 3. 生成 JWT Token
+        let token = create_token(user.id)?;
+        tracing::debug!(total_us = t0.elapsed().as_micros(), "登录完成");
+        Ok(token)
     }
 
     pub async fn get_user_back_info(&self, id: i32) -> anyhow::Result<UserBackInfoResp> {
@@ -67,8 +86,8 @@ impl UserService {
         // 合并所有权限，去重，过滤空字符串
         let permission_list: Vec<String> = results
             .into_iter()
-            .filter_map(|r| r.ok()) // 处理 Result，忽略错误的
-            .flatten() // 展开 Vec<Vec<String>> -> Vec<String>
+            .filter_map(|r| r.ok())
+            .flatten()
             .filter(|s| !s.is_empty())
             .unique()
             .collect();
@@ -83,14 +102,31 @@ impl UserService {
 
     pub async fn get_user_menu(&self, id: i32) -> anyhow::Result<Vec<RouterResp>> {
         let menu_list = self.menu_repo.get_menu_by_user_id(id).await?;
-        Ok(self.recur_routes(common_constant::PARENT_ID, &menu_list))
+
+        // 按 parent_id 分组，O(n) 构建索引，后续递归 O(1) 查找子节点
+        let menu_map: HashMap<i32, Vec<&UserMenuResp>> =
+            menu_list.iter().fold(HashMap::new(), |mut acc, menu| {
+                acc.entry(menu.parent_id).or_default().push(menu);
+                acc
+            });
+
+        Ok(self.build_routes(common_constant::PARENT_ID, &menu_map))
     }
 
-    // 递归生成路由列表
-    fn recur_routes(&self, parent_id: i32, menu_list: &[UserMenuResp]) -> Vec<RouterResp> {
-        let mut list = Vec::new();
+    // ─── 路由构建（非递归，基于 HashMap 索引） ───
 
-        for menu in menu_list.iter().filter(|m| m.parent_id == parent_id) {
+    fn build_routes(
+        &self,
+        parent_id: i32,
+        menu_map: &HashMap<i32, Vec<&UserMenuResp>>,
+    ) -> Vec<RouterResp> {
+        let Some(children) = menu_map.get(&parent_id) else {
+            return Vec::new();
+        };
+
+        let mut list = Vec::with_capacity(children.len());
+
+        for menu in children {
             let mut route_vo = RouterResp {
                 name: menu.menu_name.clone(),
                 path: self.get_router_path(menu),
@@ -105,18 +141,17 @@ impl UserService {
                 redirect: None,
             };
 
-            if menu.menu_type == common_constant::TYPE_DIR {
-                let children = self.recur_routes(menu.id, menu_list);
-                if !children.is_empty() {
+            if menu.menu_type == common_constant::MENU_TYPE_DIR {
+                let sub_routes = self.build_routes(menu.id, menu_map);
+                if !sub_routes.is_empty() {
                     route_vo.always_show = Some(true);
                     route_vo.redirect = Some("noRedirect".to_string());
                 }
-                route_vo.children = Some(children);
+                route_vo.children = Some(sub_routes);
             } else if self.is_menu_frame(menu) {
                 route_vo.meta = None;
 
-                let mut children_list = Vec::new();
-                let children = RouterResp {
+                let child = RouterResp {
                     name: menu.menu_name.clone(),
                     path: menu.path.clone().unwrap_or_default(),
                     component: menu.component.clone().unwrap_or_default(),
@@ -129,8 +164,8 @@ impl UserService {
                     always_show: None,
                     redirect: None,
                 };
-                children_list.push(children);
-                route_vo.children = Some(children_list);
+
+                route_vo.children = Some(vec![child]);
             }
 
             list.push(route_vo);
@@ -139,29 +174,30 @@ impl UserService {
         list
     }
 
-    // 获取路由地址
+    // ─── 辅助方法 ───
+
+    /// 获取路由地址
     fn get_router_path(&self, menu: &UserMenuResp) -> String {
         let router_path = menu.path.clone().unwrap_or_default();
 
-        // 一级目录
+        // 一级目录：加 / 前缀
         if menu.parent_id == common_constant::PARENT_ID
-            && menu.menu_type == common_constant::TYPE_DIR
+            && menu.menu_type == common_constant::MENU_TYPE_DIR
         {
             format!("/{}", router_path)
         }
-        // 一级菜单
+        // 一级菜单框架
         else if self.is_menu_frame(menu) {
             "/".to_string()
         }
-        // 其他情况
+        // 其他
         else {
             router_path
         }
     }
 
-    // 获取组件信息
+    /// 获取组件信息
     fn get_component(&self, menu: &UserMenuResp) -> String {
-        // 外部链接 / 菜单框架
         if self.is_menu_frame(menu) {
             return common_constant::LAYOUT.to_string();
         }
@@ -173,13 +209,15 @@ impl UserService {
         }
     }
 
-    // 是否为菜单内部跳转
+    /// 是否为菜单框架（一级菜单，内部跳转）
     fn is_menu_frame(&self, menu: &UserMenuResp) -> bool {
-        menu.parent_id == common_constant::PARENT_ID && menu.menu_type == common_constant::TYPE_MENU
+        menu.parent_id == common_constant::PARENT_ID
+            && menu.menu_type == common_constant::MENU_TYPE_PAGE
     }
 
-    // 是否为parent_view组件
+    /// 是否为 ParentView 组件
     fn is_parent_view(&self, menu: &UserMenuResp) -> bool {
-        menu.parent_id != common_constant::PARENT_ID && menu.menu_type == common_constant::TYPE_DIR
+        menu.parent_id != common_constant::PARENT_ID
+            && menu.menu_type == common_constant::MENU_TYPE_DIR
     }
 }
