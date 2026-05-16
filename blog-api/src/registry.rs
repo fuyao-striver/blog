@@ -2,7 +2,9 @@ use std::sync::Arc;
 
 use sqlx::PgPool;
 
-use crate::repo::{menu::MenuRepo, role::RoleRepo, user::UserRepo};
+use crate::repo::{
+    menu::MenuRepo, role::RoleRepo, token_blacklist::TokenBlacklistRepo, user::UserRepo,
+};
 
 /// 应用注册中心 —— 所有 repo 的唯一创建源，确保全应用单例
 ///
@@ -13,6 +15,7 @@ pub struct AppRegistry {
     pub user_repo: Arc<UserRepo>,
     pub role_repo: Arc<RoleRepo>,
     pub menu_repo: Arc<MenuRepo>,
+    pub token_blacklist_repo: Arc<TokenBlacklistRepo>,
 }
 
 impl AppRegistry {
@@ -21,6 +24,7 @@ impl AppRegistry {
             user_repo: Arc::new(UserRepo::new(db.clone())),
             role_repo: Arc::new(RoleRepo::new(db.clone())),
             menu_repo: Arc::new(MenuRepo::new(db.clone())),
+            token_blacklist_repo: Arc::new(TokenBlacklistRepo::new(db.clone())),
         }
     }
 }

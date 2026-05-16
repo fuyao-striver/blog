@@ -4,6 +4,7 @@ use anyhow::anyhow;
 use futures::future::join_all;
 use itertools::Itertools;
 
+use crate::utils::password::hash_password;
 use crate::{
     constant::common_constant,
     modal::{
@@ -14,7 +15,7 @@ use crate::{
         },
     },
     registry::AppRegistry,
-    repo::{menu::MenuRepo, role::RoleRepo, user::UserRepo},
+    repo::{menu::MenuRepo, role::RoleRepo, token_blacklist::TokenBlacklistRepo, user::UserRepo},
     utils::{jwt::create_token, password::verify_password},
 };
 
@@ -23,6 +24,7 @@ pub struct UserService {
     user_repo: Arc<UserRepo>,
     role_repo: Arc<RoleRepo>,
     menu_repo: Arc<MenuRepo>,
+    token_blacklist_repo: Arc<TokenBlacklistRepo>,
 }
 
 impl UserService {
@@ -31,7 +33,19 @@ impl UserService {
             user_repo: Arc::clone(&registry.user_repo),
             role_repo: Arc::clone(&registry.role_repo),
             menu_repo: Arc::clone(&registry.menu_repo),
+            token_blacklist_repo: Arc::clone(&registry.token_blacklist_repo),
         }
+    }
+
+    /// 更改用户密码
+    pub async fn update_password(&self, password: &str, id: i32) -> anyhow::Result<bool> {
+        // 加密密码
+        let password_hash = hash_password(password)?;
+        // 更新密码
+        Ok(self
+            .user_repo
+            .update_password(password_hash.as_str(), id)
+            .await?)
     }
 
     /// 登录方法
@@ -98,6 +112,13 @@ impl UserService {
             role_list,
             permission_list,
         })
+    }
+
+    /// 登出：将当前 token 的 jti 加入黑名单
+    pub async fn logout(&self, jti: &str, exp: usize) -> anyhow::Result<()> {
+        self.token_blacklist_repo.add(jti, exp as i64).await?;
+        tracing::info!(jti = %jti, "用户已登出");
+        Ok(())
     }
 
     pub async fn get_user_menu(&self, id: i32) -> anyhow::Result<Vec<RouterResp>> {

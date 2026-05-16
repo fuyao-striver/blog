@@ -27,4 +27,14 @@ impl UserRepo {
             .await?;
         Ok(user)
     }
+
+    // 根据用户ID更新用户密码
+    pub async fn update_password(&self, password: &str, id: i32) -> anyhow::Result<bool> {
+        let result = sqlx::query("update t_user set password = $1 where id = $2")
+            .bind(password)
+            .bind(id)
+            .execute(&self.db)
+            .await?;
+        Ok(result.rows_affected() == 1)
+    }
 }

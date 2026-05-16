@@ -21,12 +21,14 @@ use tracing_subscriber::{EnvFilter, fmt};
 
 #[derive(Clone)]
 struct AppState {
-    user_service: UserService,
+    pub registry: AppRegistry,
+    pub user_service: UserService,
 }
 
 impl AppState {
     pub fn new(registry: &AppRegistry) -> Self {
         Self {
+            registry: registry.clone(),
             user_service: UserService::new(registry),
         }
     }
@@ -52,7 +54,7 @@ async fn main() {
     let state = AppState::new(&registry);
     let app = Router::new()
         .merge(login_routes())
-        .merge(user_routers())
+        .merge(user_routers(state.clone()))
         // log_middleware 在最外层，才能记录完整耗时
         .layer(middleware::from_fn(log_middleware))
         .with_state(state);

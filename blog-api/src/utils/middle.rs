@@ -1,5 +1,6 @@
 use axum::{
     body::Body,
+    extract::State,
     http::{Request, StatusCode, header},
     middleware::Next,
     response::Response,
@@ -7,10 +8,11 @@ use axum::{
 use http_body_util::BodyExt;
 use jsonwebtoken::{DecodingKey, Validation, decode};
 
-use crate::utils::jwt::Claims;
+use crate::{AppState, utils::jwt::Claims};
 
-/// JWT 鉴权中间件
+/// JWT 鉴权中间件（含黑名单检查）
 pub async fn auth_middleware(
+    State(state): State<AppState>,
     mut request: Request<Body>,
     next: Next,
 ) -> Result<Response, StatusCode> {
@@ -24,8 +26,8 @@ pub async fn auth_middleware(
         Some(t) => t,
         None => return Err(StatusCode::UNAUTHORIZED),
     };
-    // 2. 解码并验证 token（检查有效期）
-    let jwt_secret = b"651908384@qq.com"; // 建议放在配置中
+    // 2. 解码并验证 token
+    let jwt_secret = b"651908384@qq.com";
     let token_data = match decode::<Claims>(
         &token,
         &DecodingKey::from_secret(jwt_secret.as_ref()),
@@ -49,10 +51,25 @@ pub async fn auth_middleware(
             }
         },
     };
-    // 3. 将解析后的 Claims 注入到请求扩展中
+
+    // 3. 检查 token 是否在黑名单中（已登出）
+    let jti = &token_data.claims.jti;
+    let blacklisted = state
+        .registry
+        .token_blacklist_repo
+        .is_blacklisted(jti)
+        .await
+        .unwrap_or(true); // 查询失败则拒绝访问，安全优先
+
+    if blacklisted {
+        tracing::warn!(jti = %jti, "令牌已被登出");
+        return Err(StatusCode::UNAUTHORIZED);
+    }
+
+    // 4. 将解析后的 Claims 注入到请求扩展中
     request.extensions_mut().insert(token_data.claims);
 
-    // 4. 继续处理请求
+    // 5. 继续处理请求
     Ok(next.run(request).await)
 }
 
