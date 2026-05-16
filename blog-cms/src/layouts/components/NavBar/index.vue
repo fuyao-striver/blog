@@ -14,11 +14,11 @@
         </el-tooltip>
         <!-- 修改密码 -->
         <el-tooltip content="修改密码" effect="dark" placement="bottom">
-          <password class="right-menu-item hover-effect"/>
+          <password class="right-menu-item hover-effect" />
         </el-tooltip>
         <!-- 全屏 -->
         <el-tooltip content="全屏" effect="dark" placement="bottom">
-          <screen-full class="right-menu-item hover-effect"/>
+          <screen-full class="right-menu-item hover-effect" />
         </el-tooltip>
         <!-- 布局大小 -->
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
@@ -28,9 +28,9 @@
       <el-dropdown @command="handleCommand" class="avatar-container right-menu-item hover-effect" trigger="click">
         <!-- 头像 -->
         <div class="avatar-wrapper">
-          <img :src="user.avatar" class="user-avatar"  alt="avatar"/>
+          <img :src="user.avatar" class="user-avatar" alt="avatar" />
           <el-icon class="el-icon-caret-bottom">
-            <svg-icon icon-class="caret-bottom"/>
+            <svg-icon icon-class="caret-bottom" />
           </el-icon>
         </div>
         <!-- 选项 -->
@@ -56,8 +56,8 @@ import Password from "@/components/Password/index.vue";
 import ScreenFull from "@/components/Screenfull/index.vue";
 import SizeSelect from "@/components/SizeSelect/index.vue";
 import useStore from "@/stores";
-import {computed} from "vue";
-import {messageConfirm} from "@/utils/modal.ts";
+import { computed } from "vue";
+import { messageConfirm } from "@/utils/modal.ts";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 
 const { app, user } = useStore();
@@ -78,15 +78,17 @@ const handleCommand = (command: string) => {
   }
 };
 const logout = () => {
-  messageConfirm("确定注销并退出系统吗？").then(() => {
-    user.LogOut().then(() => {
-      location.href = "/login";
-    });
-  }).catch(() => { });
+  messageConfirm("确定注销并退出系统吗？")
+    .then(() => {
+      user.LogOut().then(() => {
+        location.href = "/login";
+      });
+    })
+    .catch(() => {});
 };
-const emits = defineEmits(['setLayout']);
+const emits = defineEmits(["setLayout"]);
 const setLayout = () => {
-  emits('setLayout');
+  emits("setLayout");
 };
 </script>
 

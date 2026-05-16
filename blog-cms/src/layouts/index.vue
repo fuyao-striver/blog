@@ -7,7 +7,12 @@
       <div :class="{ 'fixed-header': fixedHeader }">
         <!-- 导航栏 -->
         <nav-bar @setLayout="setLayout" />
+        <!-- 历史标签栏 -->
+        <tag-view v-if="needTagView" />
       </div>
+      <app-main/>
+      <!-- 设置 -->
+      <Settings ref="settingRef"/>
     </div>
   </div>
 </template>
@@ -17,6 +22,9 @@ import useStore from "@/stores";
 import { computed, ref } from "vue";
 import SideBar from "./components/SideBar/index.vue";
 import NavBar from "./components/NavBar/index.vue";
+import AppMain from "./components/AppMain/index.vue";
+import TagView from "@/components/TagView/index.vue";
+import Settings from "@/components/Settings/index.vue"
 
 const { app, setting } = useStore();
 const settingRef = ref();
@@ -27,6 +35,7 @@ const classObj = computed(() => ({
   mobile: device.value === "mobile",
 }));
 const fixedHeader = computed(() => setting.fixedHeader);
+const needTagView = computed(() => setting.tagView);
 const handleClickOutside = () => {
   app.changeCollapse(true);
 };

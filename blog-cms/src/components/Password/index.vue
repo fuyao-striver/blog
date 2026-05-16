@@ -32,20 +32,19 @@ import { notifySuccess } from "@/utils/modal";
 import type { FormInstance, FormRules } from "element-plus";
 import { reactive, ref } from "vue";
 
-
 const ruleFormRef = ref<FormInstance>();
 const open = ref(false);
 const ruleForm = ref<Password>({
-  oldPassword: '',
-  newPassword: '',
-  checkPassword: '',
+  oldPassword: "",
+  newPassword: "",
+  checkPassword: "",
 });
 const openModel = () => {
   open.value = true;
   ruleForm.value = {
-    oldPassword: '',
-    newPassword: '',
-    checkPassword: '',
+    oldPassword: "",
+    newPassword: "",
+    checkPassword: "",
   };
   ruleFormRef.value?.resetFields();
 };
@@ -57,33 +56,37 @@ const submitForm = () => {
           notifySuccess(data.msg);
         }
         open.value = false;
-      })
+      });
     }
-  })
+  });
 };
 const validatePass2 = (rule: any, value: any, callback: any) => {
-  if (value === '') {
-    callback(new Error("请再次输入密码"))
+  if (value === "") {
+    callback(new Error("请再次输入密码"));
   } else if (value !== ruleForm.value.newPassword) {
-    callback(new Error("两次输入的密码不一致"))
+    callback(new Error("两次输入的密码不一致"));
   } else {
-    callback()
+    callback();
   }
 };
 const rules = reactive<FormRules>({
-  oldPassword: [{
-    required: true, message: "请输入密码", trigger: "blur"
-  }, { min: 6, message: "密码不能少于6位", trigger: "blur" }],
+  oldPassword: [
+    {
+      required: true,
+      message: "请输入密码",
+      trigger: "blur",
+    },
+    { min: 6, message: "密码不能少于6位", trigger: "blur" },
+  ],
   newPassword: [
     { required: true, message: "请输入密码", trigger: "blur" },
-    { min: 6, message: "密码不能少于6位", trigger: "blur" }],
+    { min: 6, message: "密码不能少于6位", trigger: "blur" },
+  ],
   checkPassword: [
-    { required: true, validator: validatePass2, trigger: 'blur' },
-    { min: 6, message: "密码不能少于6位", trigger: "blur" }],
+    { required: true, validator: validatePass2, trigger: "blur" },
+    { min: 6, message: "密码不能少于6位", trigger: "blur" },
+  ],
 });
-
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -5,8 +5,12 @@
     </div>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item v-for="item of sizeOptions" :key="item.value" :disabled="size == item.value"
-                          :command="item.value">
+        <el-dropdown-item
+          v-for="item of sizeOptions"
+          :key="item.value"
+          :disabled="size == item.value"
+          :command="item.value"
+        >
           {{ item.label }}
         </el-dropdown-item>
       </el-dropdown-menu>
@@ -15,23 +19,23 @@
 </template>
 
 <script setup lang="ts">
-import SvgIcon from '@/components/SvgIcon/index.vue';
-import useStore from '@/stores';
-import { computed, ref } from 'vue';
+import SvgIcon from "@/components/SvgIcon/index.vue";
+import useStore from "@/stores";
+import { computed, ref } from "vue";
 
 const { app } = useStore();
 const size = computed(() => app.size);
 
 const sizeOptions = ref([
-  { label: '默认', value: 'default' },
-  { label: '大型', value: 'large' },
-  { label: '小型', value: 'small' }
+  { label: "默认", value: "default" },
+  { label: "大型", value: "large" },
+  { label: "小型", value: "small" },
 ]);
 
 const handleSetSize = (size: string) => {
   app.setSize(size);
-  ElMessage.success('切换布局大小成功');
-}
+  ElMessage.success("切换布局大小成功");
+};
 </script>
 
 <style lang="scss" scoped>
