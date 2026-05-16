@@ -1,6 +1,6 @@
 import type { Result } from "@/modal";
 import { type AxiosPromise } from "axios";
-import type { Password, UserInfo } from "@/api/user/types";
+import type { Password, UserInfo } from "./types";
 import request from "@/utils/request.ts";
 
 /**

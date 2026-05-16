@@ -1,5 +1,5 @@
 import request from "@/utils/request.ts";
-import type { LoginForm } from "@/api/login/types";
+import type { LoginForm } from "./types";
 import type { AxiosPromise } from "axios";
 import type { Result } from "@/modal";
 
