@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use sqlx::PgPool;
 
+use crate::repo::friend::FriendRepo;
 use crate::repo::{
     menu::MenuRepo, role::RoleRepo, token_blacklist::TokenBlacklistRepo, user::UserRepo,
 };
@@ -16,6 +17,7 @@ pub struct AppRegistry {
     pub role_repo: Arc<RoleRepo>,
     pub menu_repo: Arc<MenuRepo>,
     pub token_blacklist_repo: Arc<TokenBlacklistRepo>,
+    pub friend_repo: Arc<FriendRepo>,
 }
 
 impl AppRegistry {
@@ -25,6 +27,7 @@ impl AppRegistry {
             role_repo: Arc::new(RoleRepo::new(db.clone())),
             menu_repo: Arc::new(MenuRepo::new(db.clone())),
             token_blacklist_repo: Arc::new(TokenBlacklistRepo::new(db.clone())),
+            friend_repo: Arc::new(FriendRepo::new(db.clone())),
         }
     }
 }

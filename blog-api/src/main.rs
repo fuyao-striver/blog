@@ -10,7 +10,8 @@ mod service;
 mod utils;
 
 use crate::registry::AppRegistry;
-use crate::router::{login_routes, user_routers};
+use crate::router::{friend_routers, login_routes, user_routers};
+use crate::service::friend::FriendService;
 use crate::service::user::UserService;
 use crate::utils::middle::log_middleware;
 use crate::utils::sql::connect_postgres;
@@ -23,6 +24,7 @@ use tracing_subscriber::{EnvFilter, fmt};
 struct AppState {
     pub registry: AppRegistry,
     pub user_service: UserService,
+    pub friend_service: FriendService,
 }
 
 impl AppState {
@@ -30,6 +32,7 @@ impl AppState {
         Self {
             registry: registry.clone(),
             user_service: UserService::new(registry),
+            friend_service: FriendService::new(registry),
         }
     }
 }
@@ -55,6 +58,7 @@ async fn main() {
     let app = Router::new()
         .merge(login_routes())
         .merge(user_routers(state.clone()))
+        .merge(friend_routers(state.clone()))
         // log_middleware 在最外层，才能记录完整耗时
         .layer(middleware::from_fn(log_middleware))
         .with_state(state);

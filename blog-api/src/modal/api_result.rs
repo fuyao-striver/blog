@@ -79,3 +79,9 @@ impl<T: Serialize> IntoResponse for ApiResponse<T> {
         (status, Json(self)).into_response()
     }
 }
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PageResult<T> {
+    pub count: i64,
+    pub record_list: Vec<T>,
+}

@@ -3,6 +3,7 @@ use axum::{
     routing::{get, post, put},
 };
 
+use crate::handler::friend::get_friends;
 use crate::{
     AppState,
     handler::{
@@ -11,7 +12,6 @@ use crate::{
     },
     utils::middle::auth_middleware,
 };
-
 // 子路由模块
 
 /// 公开路由（无需鉴权）
@@ -26,6 +26,13 @@ pub fn user_routers(state: AppState) -> Router<AppState> {
         .route("/admin/user/getUserMenu", get(get_user_menu))
         .route("/admin/password", put(update_password))
         .route("/logout", get(logout))
+        // 使用 from_fn_with_state 使中间件能访问 AppState（黑名单检查）
+        .route_layer(middleware::from_fn_with_state(state, auth_middleware))
+}
+
+pub fn friend_routers(state: AppState) -> Router<AppState> {
+    Router::new()
+        .route("/admin/friend/list", get(get_friends))
         // 使用 from_fn_with_state 使中间件能访问 AppState（黑名单检查）
         .route_layer(middleware::from_fn_with_state(state, auth_middleware))
 }
