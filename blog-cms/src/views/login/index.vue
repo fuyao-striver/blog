@@ -10,14 +10,8 @@
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input
-          v-model="loginForm.password"
-          type="password"
-          size="large"
-          show-password
-          placeholder="请输入密码"
-          @keyup.enter=""
-        >
+        <el-input v-model="loginForm.password" type="password" size="large" show-password placeholder="请输入密码"
+          @keyup.enter="">
           <template #prefix>
             <svg-icon icon-class="password"></svg-icon>
           </template>
@@ -38,26 +32,23 @@
 </template>
 
 <script lang="ts" setup>
-import type { LoginForm } from "@/api/login/type";
-import type { FormInstance, FormRules } from "element-plus";
-import { reactive, ref } from "vue";
+import type { LoginForm } from '@/api/login/type';
+import type { FormInstance, FormRules } from 'element-plus';
+import { reactive, ref } from 'vue';
 
-const loading = ref(false);
+const loading = ref(false)
 
 const rules = reactive<FormRules>({
   username: [{ require: true, message: "请输入用户名", trigger: "blur" }],
-  password: [
-    { required: true, message: "请输入密码", trigger: "blur" },
-    { min: 6, message: "密码不能少于6位", trigger: "blur" },
-  ],
-});
+  password: [{ required: true, message: "请输入密码", trigger: "blur" }, { min: 6, message: "密码不能少于6位", trigger: "blur" }],
+})
 
 const loginForm = reactive<LoginForm>({
   username: "test@qq.com",
-  password: "123456",
-});
+  password: "123456"
+})
 
-const loginFormRef = ref<FormInstance>();
+const loginFormRef = ref<FormInstance>()
 </script>
 
 <style lang="scss" scoped>
