@@ -14,8 +14,8 @@ const constantRouters: RouteRecordRaw[] = [
     component: () => import("@/views/login/index.vue"),
     meta: {
       hidden: true,
-    }
-  }
+    },
+  },
 ];
 
 const router = createRouter({

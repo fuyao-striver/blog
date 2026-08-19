@@ -3,10 +3,12 @@ import { createPinia } from "pinia";
 
 import App from "./App.vue";
 import router from "./router";
-
+// 自定义svg插件
+import SvgIcon from "@/components/SvgIcon/index.vue";
+import "virtual:svg-icons-register";
 const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
-
+app.component("svg-icon", SvgIcon);
 app.mount("#app");
