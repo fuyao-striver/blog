@@ -27,7 +27,7 @@ const useUserStore = defineStore("useUserStore", {
             reject(error);
           });
       });
-    }
+    },
   },
 });
 

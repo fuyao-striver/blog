@@ -10,15 +10,21 @@
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input v-model="loginForm.password" type="password" size="large" show-password placeholder="请输入密码"
-          @keyup.enter="">
+        <el-input
+          v-model="loginForm.password"
+          type="password"
+          size="large"
+          show-password
+          placeholder="请输入密码"
+          @keyup.enter="handleLogin(loginFormRef)"
+        >
           <template #prefix>
             <svg-icon icon-class="password"></svg-icon>
           </template>
         </el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click.prevent="" :loading="loading" style="width: 100%">
+        <el-button type="primary" @click.prevent="handleLogin(loginFormRef)" :loading="loading" style="width: 100%">
           <span v-if="!loading">登录</span>
           <span v-else>登录中...</span>
         </el-button>
@@ -32,23 +38,45 @@
 </template>
 
 <script lang="ts" setup>
-import type { LoginForm } from '@/api/login/type';
-import type { FormInstance, FormRules } from 'element-plus';
-import { reactive, ref } from 'vue';
+import type { LoginForm } from "@/api/login/type";
+import type { FormInstance, FormRules } from "element-plus";
+import { reactive, ref } from "vue";
+import useStore from "@/store";
+import router from "@/router";
 
-const loading = ref(false)
-
+const loading = ref(false);
+const { user } = useStore();
 const rules = reactive<FormRules>({
   username: [{ require: true, message: "请输入用户名", trigger: "blur" }],
-  password: [{ required: true, message: "请输入密码", trigger: "blur" }, { min: 6, message: "密码不能少于6位", trigger: "blur" }],
-})
+  password: [
+    { required: true, message: "请输入密码", trigger: "blur" },
+    { min: 6, message: "密码不能少于6位", trigger: "blur" },
+  ],
+});
 
 const loginForm = reactive<LoginForm>({
   username: "test@qq.com",
-  password: "123456"
-})
+  password: "123456",
+});
 
-const loginFormRef = ref<FormInstance>()
+const loginFormRef = ref<FormInstance>();
+
+const handleLogin = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  await formEl.validate((valid) => {
+    if (valid) {
+      loading.value = true;
+      user
+        .LogIn(loginForm)
+        .then(() => {
+          router.push("/");
+        })
+        .finally(() => {
+          loading.value = false;
+        });
+    }
+  });
+};
 </script>
 
 <style lang="scss" scoped>

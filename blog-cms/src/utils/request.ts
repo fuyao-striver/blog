@@ -11,8 +11,8 @@ const requests = axios.create({
   // 请求头
   headers: {
     "Content-Type": "application/json;charset=UTF-8",
-  }
-})
+  },
+});
 
 // 请求拦截器
 requests.interceptors.request.use(
@@ -22,10 +22,11 @@ requests.interceptors.request.use(
       config.headers["Authorization"] = token_prefix + getToken();
     }
     return config;
-  }, error => {
-    return Promise.reject(error)
-  }
-)
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
 
 // 配置响应拦截器
 requests.interceptors.response.use(
@@ -79,9 +80,8 @@ requests.interceptors.response.use(
       duration: 5 * 1000,
     });
     return Promise.reject(error);
-  }
+  },
 );
 
 // 对外暴露
 export default requests;
-

@@ -1,4 +1,3 @@
-
 /**
  * 结果返回接口
  */
@@ -20,4 +19,3 @@ export interface Result<T> {
    */
   data: T;
 }
-
