@@ -8,7 +8,10 @@ anyhow = "1.0.104"
 axum = "0.8.9"
 chrono = { version = "0.4.45", features = ["serde"] }
 dotenvy = "0.15.7"
+hex = "0.4.3"
+jsonwebtoken = { version = "11.0.0", features = ["rust_crypto"] }
 serde = "1.0.229"
+sha2 = "0.11.0"
 sqlx = { version = "0.9.0", features = [
   "mysql",
   "chrono",
