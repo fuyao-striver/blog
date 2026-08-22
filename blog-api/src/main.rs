@@ -1,19 +1,11 @@
-use axum::{Router, routing::get};
-use blog_api::utils::{log::app_log, sql::connect_mysql};
-use sqlx::{MySql, Pool};
+use axum::{Router, routing::post};
+use blog_api::{
+    AppState,
+    handler::user_handler::login,
+    utils::{log::app_log, sql::connect_mysql},
+};
 use tower_http::trace::TraceLayer;
 use tracing::Level;
-
-#[derive(Clone)]
-pub struct AppState {
-    db: Pool<MySql>,
-}
-
-impl AppState {
-    pub fn new(db: Pool<MySql>) -> Self {
-        Self { db }
-    }
-}
 
 #[tokio::main]
 async fn main() {
@@ -28,7 +20,7 @@ async fn main() {
     let state = AppState::new(pool);
     // 创建一个路由
     let app = Router::new()
-        .route("/", get(root))
+        .route("/login", post(login))
         // 添加TraceLayer中间件
         .layer(
             TraceLayer::new_for_http()
@@ -43,8 +35,4 @@ async fn main() {
         .await
         .expect("端口监听失败!");
     axum::serve(listener, app).await.expect("服务启动失败!");
-}
-
-async fn root() -> &'static str {
-    "hello world"
 }

@@ -7,7 +7,6 @@ pub fn app_log() {
     // 2. 配置日志格式
     let subscriber = fmt::Subscriber::builder()
         .with_env_filter(filter)
-        .with_target(true) // 显示路径模块
         .with_thread_ids(true) // 显示线程id
         .with_file(true)
         .with_line_number(true)
