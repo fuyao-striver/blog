@@ -2,6 +2,10 @@
   <div :class="{ 'has-logo': showLogo }">
     <!--网站logo-->
     <logo v-if="showLogo" :collapse="isCollapse" />
+    <!--侧边栏-->
+    <el-scrollbar wrap-class="scrollbar-wrapper">
+      <el-menu></el-menu>
+    </el-scrollbar>
   </div>
 </template>
 

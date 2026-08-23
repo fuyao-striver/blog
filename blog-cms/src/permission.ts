@@ -27,6 +27,10 @@ router.beforeEach((to, from, next) => {
     } else {
       if (user.roleList.length === 0) {
         isRelogin.show = false;
+        // 如果没有拉取用户信息，则拉取用户信息
+        user.GetInfo().then(() => {
+          isRelogin.show = false;
+        });
       }
     }
   }
