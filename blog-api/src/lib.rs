@@ -1,6 +1,9 @@
 use sqlx::MySqlPool;
 
-use crate::{dao::user_dao::UserDao, service::user_service::UserService};
+use crate::{
+    dao::{role_dao::RoleDao, user_dao::UserDao},
+    service::user_service::UserService,
+};
 
 pub mod dao;
 pub mod entity;
@@ -17,8 +20,9 @@ pub struct AppState {
 
 impl AppState {
     pub fn new(db: MySqlPool) -> Self {
-        let user_dao = UserDao::new(db);
-        let user_service = UserService::new(user_dao);
+        let user_dao = UserDao::new(db.clone());
+        let role_dao = RoleDao::new(db);
+        let user_service = UserService::new(user_dao, role_dao);
         Self { user_service }
     }
 }

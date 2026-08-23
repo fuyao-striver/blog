@@ -9,9 +9,10 @@ pub enum AppError {
     Database(String),
     #[error("404错误：{0}")]
     NotFound(String),
-
     #[error("token创建失败!")]
     TokenError,
+    #[error("认证错误!")]
+    AuthError,
 }
 
 impl IntoResponse for AppError {
@@ -20,6 +21,7 @@ impl IntoResponse for AppError {
             AppError::Database(s) => (StatusCode::INTERNAL_SERVER_ERROR, s),
             AppError::NotFound(s) => (StatusCode::NOT_FOUND, s),
             AppError::TokenError => (StatusCode::BAD_REQUEST, "token创建失败".to_string()),
+            AppError::AuthError => (StatusCode::UNAUTHORIZED, "认证失败!".to_string()),
         };
         (
             status,
