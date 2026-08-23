@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
+import Layouts from "@/layouts/index.vue";
 
 const constantRouters: RouteRecordRaw[] = [
   {
@@ -15,6 +16,10 @@ const constantRouters: RouteRecordRaw[] = [
     meta: {
       hidden: true,
     },
+  },
+  {
+    path: "",
+    component: Layouts,
   },
 ];
 
