@@ -7,10 +7,11 @@ use crate::utils::error::AppError;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
-    pub sub: i32,        // 用户id
-    pub role_id: String, // 用户权限id
-    pub exp: usize,      // 过期时间
-    pub iat: usize,      // 签发时间
+    pub sub: i32,                     // 用户id
+    pub role_list: Vec<String>,       // 用户角色
+    pub permission_list: Vec<String>, // 用户权限id
+    pub exp: usize,                   // 过期时间
+    pub iat: usize,                   // 签发时间
 }
 
 impl<S> FromRequestParts<S> for Claims
@@ -41,13 +42,18 @@ pub struct JwtConfig;
 
 impl JwtConfig {
     /// 用 用户id创建token
-    pub fn create_token(user_id: i32, role_id: String) -> anyhow::Result<String> {
+    pub fn create_token(
+        user_id: i32,
+        role_list: Vec<String>,
+        permission_list: Vec<String>,
+    ) -> anyhow::Result<String> {
         let now = Utc::now();
         let secret = std::env::var("TOKEN_SECRET")?;
         let expiration_time: i64 = std::env::var("TOKEN_EXPIRATION_TIME")?.parse()?;
         let claims = Claims {
             sub: user_id,
-            role_id,
+            role_list,
+            permission_list,
             iat: now.timestamp() as usize,
             exp: (now + chrono::Duration::hours(expiration_time)).timestamp() as usize,
         };

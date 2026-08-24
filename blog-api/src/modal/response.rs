@@ -2,6 +2,8 @@ use std::fmt::Debug;
 
 use serde::Serialize;
 
+pub mod user_reponse;
+
 #[derive(Debug, Serialize)]
 pub struct AppResponse<T> {
     /// 返回状态

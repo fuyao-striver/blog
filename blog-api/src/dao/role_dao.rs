@@ -11,14 +11,14 @@ impl RoleDao {
     }
 
     /// 通过用户id获取用户权限
-    pub async fn get_role_list_by_user_id(&self, user_id: i32) -> anyhow::Result<String> {
-        let role_list: String = sqlx::query_scalar!(
+    pub async fn get_role_list_by_user_id(&self, user_id: i32) -> anyhow::Result<Vec<String>> {
+        let role_list = sqlx::query_scalar!(
             r#"select r.id 
         from t_role r inner join t_user_role ur on r.id = ur.role_id 
         where ur.user_id = ? and r.is_disable = 0"#,
             user_id
         )
-        .fetch_one(&self.db)
+        .fetch_all(&self.db)
         .await?;
         Ok(role_list)
     }
