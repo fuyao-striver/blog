@@ -2,8 +2,11 @@ use sha2::Digest;
 
 use crate::{
     dao::{menu_dao::MenuDao, role_dao::RoleDao, user_dao::UserDao},
-    modal::request::login::LoginRequest,
-    utils::{error::AppError, jwt::JwtConfig},
+    modal::{request::login::LoginRequest, response::user_reponse::UserBackInfo},
+    utils::{
+        error::AppError,
+        jwt::{Claims, JwtConfig},
+    },
 };
 
 #[derive(Clone)]
@@ -61,5 +64,18 @@ impl UserService {
         Ok(token)
     }
 
-    pub fn get_user_back_info(&self) {}
+    /// 获取用户信息
+    pub async fn get_user_back_info(&self, claims: Claims) -> Result<UserBackInfo, AppError> {
+        let avatar = self
+            .user_dao
+            .get_avatar(claims.sub)
+            .await
+            .map_err(|e| AppError::Database(e.to_string()))?;
+        Ok(UserBackInfo {
+            id: claims.sub,
+            avatar,
+            role_list: claims.role_list,
+            permission_list: claims.permission_list,
+        })
+    }
 }

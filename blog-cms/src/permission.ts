@@ -33,6 +33,14 @@ router.beforeEach((to, from, next) => {
         });
       }
     }
+  } else {
+    // 未登录可以访问白名单
+    if (whiteList.indexOf(to.path) !== -1) {
+      next();
+    } else {
+      next(`/login?redirect=${to.path}`);
+      nProgress.done();
+    }
   }
 });
 

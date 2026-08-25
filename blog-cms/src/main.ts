@@ -8,6 +8,9 @@ import router from "./router";
 // 自定义svg插件
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import "virtual:svg-icons-register";
+
+import "@/permission";
+
 const app = createApp(App);
 
 app.use(createPinia());
