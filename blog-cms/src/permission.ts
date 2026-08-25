@@ -16,30 +16,36 @@ nProgress.configure({
 const whiteList = ["/login"];
 
 // 路由前卫
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   nProgress.start();
-  const { user } = useStore();
+  const { user, permission } = useStore();
   // 判断是否有token
   if (getToken()) {
     if (to.path === "/login") {
-      next({ path: "/" });
       nProgress.done();
+      return "/";
     } else {
       if (user.roleList.length === 0) {
         isRelogin.show = false;
         // 如果没有拉取用户信息，则拉取用户信息
         user.GetInfo().then(() => {
           isRelogin.show = false;
+          permission.generateRoutes().then((accessRoutes) => {
+            accessRoutes.forEach((route) => {
+              router.addRoute(route)
+            });
+            next({ ...to, replace: true })
+          })
         });
       }
     }
   } else {
     // 未登录可以访问白名单
     if (whiteList.indexOf(to.path) !== -1) {
-      next();
+      return;
     } else {
-      next(`/login?redirect=${to.path}`);
       nProgress.done();
+      return `/login?redirect=${to.path}`;
     }
   }
 });
