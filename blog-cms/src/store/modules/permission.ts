@@ -34,7 +34,7 @@ const filterAsyncRoutes = (routes: RouteRecordRaw[]) => {
 
 const usePermissionStore = defineStore("usePermissionStore", {
   state: (): PermissionState => ({
-    routes: []
+    routes: [],
   }),
   actions: {
     setRoutes(routes: RouteRecordRaw[]) {
@@ -42,19 +42,21 @@ const usePermissionStore = defineStore("usePermissionStore", {
     },
     generateRoutes(): Promise<RouteRecordRaw[]> {
       return new Promise((resolve, reject) => {
-        getUserMenu().then(({ data }) => {
-          if (data.flag) {
-            const asyncRoutes = data.data;
-            const accessedRoutes = filterAsyncRoutes(asyncRoutes);
-            this.setRoutes(accessedRoutes);
-            resolve(accessedRoutes)
-          }
-        }).catch((error) => {
-          reject(error);
-        })
-      })
-    }
-  }
-})
+        getUserMenu()
+          .then(({ data }) => {
+            if (data.flag) {
+              const asyncRoutes = data.data;
+              const accessedRoutes = filterAsyncRoutes(asyncRoutes);
+              this.setRoutes(accessedRoutes);
+              resolve(accessedRoutes);
+            }
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+  },
+});
 
 export default usePermissionStore;

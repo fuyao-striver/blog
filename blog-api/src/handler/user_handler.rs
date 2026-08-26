@@ -4,7 +4,10 @@ use crate::{
     AppState,
     modal::{
         request::login::LoginRequest,
-        response::{AppResponse, user_reponse::UserBackInfo},
+        response::{
+            AppResponse,
+            user_reponse::{RouterResp, UserBackInfo},
+        },
     },
     utils::{error::AppError, jwt::Claims},
 };
@@ -26,5 +29,17 @@ pub async fn get_user_info(
     Ok(Json(AppResponse::<UserBackInfo>::ok(
         "获取用户信息成功".to_string(),
         Some(user_info),
+    )))
+}
+
+// 获取登录用户的菜单
+pub async fn get_user_menu(
+    claims: Claims,
+    State(state): State<AppState>,
+) -> Result<Json<AppResponse<Vec<RouterResp>>>, AppError> {
+    let route = state.user_service.get_user_menu(claims.sub).await?;
+    Ok(Json(AppResponse::<Vec<RouterResp>>::ok(
+        "获取登录用户的菜单成功!".to_string(),
+        Some(route),
     )))
 }

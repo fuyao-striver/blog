@@ -1,8 +1,12 @@
 use sha2::Digest;
 
 use crate::{
+    constants::common_constant,
     dao::{menu_dao::MenuDao, role_dao::RoleDao, user_dao::UserDao},
-    modal::{request::login::LoginRequest, response::user_reponse::UserBackInfo},
+    modal::{
+        request::login::LoginRequest,
+        response::user_reponse::{MetaResp, RouterResp, UserBackInfo, UserMenu},
+    },
     utils::{
         error::AppError,
         jwt::{Claims, JwtConfig},
@@ -77,5 +81,131 @@ impl UserService {
             role_list: claims.role_list,
             permission_list: claims.permission_list,
         })
+    }
+
+    /// 获取用户菜单
+    pub async fn get_user_menu(&self, user_id: i32) -> Result<Vec<RouterResp>, AppError> {
+        // 查询用户菜单
+        let user_menu = self
+            .menu_dao
+            .get_menu_by_user_id(user_id)
+            .await
+            .map_err(|e| AppError::Database(e.to_string()))?;
+        // 递归生成路由，parent_id为0
+        Ok(Self::recur_routes(common_constant::PARENT_ID, &user_menu))
+    }
+
+    /**
+     * 递归生成路由列表
+     */
+    fn recur_routes(parent_id: i32, menu_list: &[UserMenu]) -> Vec<RouterResp> {
+        let mut list = Vec::new();
+
+        for menu in menu_list.iter().filter(|m| m.parent_id == parent_id) {
+            let mut route_vo = RouterResp {
+                name: menu.menu_name.clone(),
+                path: Some(Self::get_router_path(menu)),
+                component: Some(Self::get_component(menu)),
+                meta: Some(MetaResp {
+                    title: menu.menu_name.clone(),
+                    icon: menu.icon.clone(),
+                    hidden: menu.is_hidden == 1,
+                }),
+                always_show: None,
+                redirect: None,
+                children: None,
+            };
+
+            if menu.menu_type == common_constant::TYPE_DIR {
+                // 目录类型：递归获取子路由
+                let children = Self::recur_routes(menu.id, menu_list);
+                if !children.is_empty() {
+                    route_vo.always_show = Some(true);
+                    route_vo.redirect = Some("noRedirect".to_string());
+                }
+                route_vo.children = Some(children);
+            } else if Self::is_menu_frame(menu) {
+                // 一级菜单（内部跳转）
+                route_vo.meta = None;
+                let mut children_list = Vec::new();
+                let child = RouterResp {
+                    name: menu.menu_name.clone(),
+                    path: menu.path.clone(),
+                    component: menu.component.clone(),
+                    meta: Some(MetaResp {
+                        title: menu.menu_name.clone(),
+                        icon: menu.icon.clone(),
+                        hidden: menu.is_hidden == 1,
+                    }),
+                    always_show: None,
+                    redirect: None,
+                    children: None,
+                };
+                children_list.push(child);
+                route_vo.children = Some(children_list);
+            }
+
+            list.push(route_vo);
+        }
+
+        list
+    }
+
+    /**
+     * 获取路由地址
+     */
+    fn get_router_path(menu: &UserMenu) -> String {
+        let router_path = menu.path.clone().unwrap_or_default();
+
+        if menu.parent_id == common_constant::PARENT_ID
+            && menu.menu_type == common_constant::TYPE_DIR
+        {
+            // 一级目录：添加前缀斜杠
+            format!("/{}", router_path)
+        } else if Self::is_menu_frame(menu) {
+            // 一级菜单：路径设为根
+            "/".to_string()
+        } else {
+            router_path
+        }
+    }
+
+    /**
+     * 获取组件信息
+     */
+    fn get_component(menu: &UserMenu) -> String {
+        // 如果 component 存在且非空，并且不是一级菜单，则直接使用该组件
+        if let Some(comp) = &menu.component
+            && !comp.is_empty()
+            && !Self::is_menu_frame(menu)
+        {
+            return comp.clone();
+        }
+
+        // 如果 component 为空（None 或空字符串），且是 parent_view 类型（非一级目录），则使用 ParentView
+        let is_empty_or_none = match &menu.component {
+            Some(comp) => comp.is_empty(),
+            None => true,
+        };
+        if is_empty_or_none && Self::is_parent_view(menu) {
+            return common_constant::PARENT_VIEW.to_string();
+        }
+
+        // 默认返回 Layout
+        common_constant::LAYOUT.to_string()
+    }
+
+    /**
+     * 是否为菜单内部跳转（一级菜单）
+     */
+    fn is_menu_frame(menu: &UserMenu) -> bool {
+        menu.parent_id == common_constant::PARENT_ID && menu.menu_type == common_constant::TYPE_MENU
+    }
+
+    /**
+     * 是否为 parent_view 组件（非一级目录）
+     */
+    fn is_parent_view(menu: &UserMenu) -> bool {
+        menu.parent_id != common_constant::PARENT_ID && menu.menu_type == common_constant::TYPE_DIR
     }
 }

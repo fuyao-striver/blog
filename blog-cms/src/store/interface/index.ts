@@ -65,5 +65,5 @@ export interface PermissionState {
   /**
    * 路由
    */
-  routes: RouteRecordRaw[]
+  routes: RouteRecordRaw[];
 }

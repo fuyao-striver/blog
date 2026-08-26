@@ -16,7 +16,7 @@ nProgress.configure({
 const whiteList = ["/login"];
 
 // 路由前卫
-router.beforeEach((to, _from, next) => {
+router.beforeEach((to) => {
   nProgress.start();
   const { user, permission } = useStore();
   // 判断是否有token
@@ -32,17 +32,19 @@ router.beforeEach((to, _from, next) => {
           isRelogin.show = false;
           permission.generateRoutes().then((accessRoutes) => {
             accessRoutes.forEach((route) => {
-              router.addRoute(route)
+              router.addRoute(route);
             });
-            next({ ...to, replace: true })
-          })
+            return { ...to, replace: true };
+          });
         });
+      } else {
+        return true;
       }
     }
   } else {
     // 未登录可以访问白名单
     if (whiteList.indexOf(to.path) !== -1) {
-      return;
+      return true;
     } else {
       nProgress.done();
       return `/login?redirect=${to.path}`;

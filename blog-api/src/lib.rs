@@ -5,6 +5,7 @@ use crate::{
     service::user_service::UserService,
 };
 
+pub mod constants;
 pub mod dao;
 pub mod entity;
 pub mod handler;

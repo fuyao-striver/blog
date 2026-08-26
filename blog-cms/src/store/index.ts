@@ -7,7 +7,7 @@ const useStore = () => ({
   user: useUserStore(),
   app: useAppStore(),
   setting: useSettingStore(),
-  permission: usePermissionStore()
+  permission: usePermissionStore(),
 });
 
 export default useStore;
