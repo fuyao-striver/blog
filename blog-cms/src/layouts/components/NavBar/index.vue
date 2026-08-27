@@ -24,15 +24,15 @@
 <script setup lang="ts">
 import Hamburger from "@/components/Hamburger/index.vue";
 import Breadcrumb from "@/components/Breadcrumd/index.vue";
-import Password from "@/components/Password/index.vue"
+import Password from "@/components/Password/index.vue";
 import { computed } from "vue";
 import useStore from "@/store";
 
-const { app } = useStore()
-const device = computed(() => app.device)
+const { app } = useStore();
+const device = computed(() => app.device);
 const openHome = () => {
-  window.open("https://www.ttkwsd.top")
-}
+  window.open("https://www.ttkwsd.top");
+};
 </script>
 
 <style lang="scss" scoped>

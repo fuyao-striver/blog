@@ -22,6 +22,6 @@ export const updateAdminPassword = (data: Password): AxiosPromise<Result<null>> 
   return requests({
     url: "/admin/user/password",
     method: "POST",
-    data
-  })
-}
+    data,
+  });
+};

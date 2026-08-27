@@ -4,7 +4,7 @@ use crate::{
     constants::common_constant,
     dao::{menu_dao::MenuDao, role_dao::RoleDao, user_dao::UserDao},
     modal::{
-        request::login::LoginRequest,
+        request::{login::LoginRequest, user::UpdatePassword},
         response::user_reponse::{MetaResp, RouterResp, UserBackInfo, UserMenu},
     },
     utils::{
@@ -27,6 +27,29 @@ impl UserService {
             role_dao,
             menu_dao,
         }
+    }
+
+    // 更新用户密码
+    pub async fn update_password(
+        &self,
+        update_password: UpdatePassword,
+        user_id: i32,
+    ) -> Result<bool, AppError> {
+        let update_password = UpdatePassword {
+            new_password: hex::encode(sha2::Sha256::digest(
+                update_password.new_password.as_bytes(),
+            )),
+            old_password: hex::encode(sha2::Sha256::digest(
+                update_password.old_password.as_bytes(),
+            )),
+        };
+
+        let result = self
+            .user_dao
+            .update_password(update_password, user_id)
+            .await
+            .map_err(|e| AppError::Database(e.to_string()))?;
+        Ok(result)
     }
 
     /// 通过用户名和密码查询用户id,成功则返回token

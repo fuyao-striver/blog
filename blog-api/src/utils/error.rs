@@ -25,7 +25,10 @@ impl IntoResponse for AppError {
         };
         (
             status,
-            Json(AppResponse::<()>::error_msg(status.as_u16(), error_message)),
+            Json(AppResponse::<()>::error_msg(
+                status.as_u16(),
+                error_message.as_str(),
+            )),
         )
             .into_response()
     }

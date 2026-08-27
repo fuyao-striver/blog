@@ -1,6 +1,6 @@
 use sqlx::MySqlPool;
 
-use crate::modal::request::login::LoginRequest;
+use crate::modal::request::{login::LoginRequest, user::UpdatePassword};
 
 #[derive(Clone)]
 pub struct UserDao {
@@ -30,5 +30,22 @@ impl UserDao {
             .fetch_one(&self.db)
             .await?;
         Ok(avatar)
+    }
+
+    // 修改用户密码
+    pub async fn update_password(
+        &self,
+        update_password: UpdatePassword,
+        user_id: i32,
+    ) -> anyhow::Result<bool> {
+        let result = sqlx::query!(
+            r#"update t_user set password = ? where id = ? and password = ?"#,
+            update_password.new_password,
+            user_id,
+            update_password.old_password
+        )
+        .execute(&self.db)
+        .await?;
+        Ok(result.rows_affected() > 0)
     }
 }
