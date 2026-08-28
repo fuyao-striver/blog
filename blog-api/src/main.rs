@@ -1,9 +1,6 @@
-use axum::{Router, routing::post};
+use axum::{Router, routing::{get, post}};
 use blog_api::{
-    AppState,
-    handler::user_handler::login,
-    router::admin_user_router,
-    utils::{log::app_log, sql::connect_mysql},
+    AppState, handler::user_handler::{login, logout}, router::admin_user_router, utils::{log::app_log, sql::connect_mysql},
 };
 use tower_http::trace::TraceLayer;
 use tracing::Level;
@@ -22,6 +19,7 @@ async fn main() {
     // 创建一个路由
     let app = Router::new()
         .route("/login", post(login))
+        .route("/logout", get(logout))
         .nest("/admin/user", admin_user_router())
         // 添加TraceLayer中间件
         .layer(

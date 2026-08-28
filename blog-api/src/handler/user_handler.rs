@@ -21,6 +21,11 @@ pub async fn login(
     Ok(Json(AppResponse::ok("登录成功!", Some(result))))
 }
 
+pub async fn logout(State(_state): State<AppState>,_claims: Claims) -> AppResult<()>{
+    // todo 可以后期维护一个token表，也可以使用redis存储
+    Ok(Json(AppResponse::<()>::ok_msg("退出成功!")))
+}
+
 pub async fn get_user_info(
     State(state): State<AppState>,
     claims: Claims,

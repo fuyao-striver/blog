@@ -16,7 +16,33 @@
         <el-tooltip content="修改密码" effect="dark" placement="bottom">
           <password class="right-menu-item hover-effect" />
         </el-tooltip>
+        <!-- 全屏 -->
+        <el-tooltip content="修改密码" effect="dark" placement="bottom">
+          <screen-full class="right-menu-item hover-effect" />
+        </el-tooltip>
+        <!-- 布局大小 -->
+        <el-tooltip content="修改密码" effect="dark" placement="bottom">
+          <size-select class="right-menu-item hover-effect" />
+        </el-tooltip>
       </template>
+      <el-dropdown @command="handleCommand" class="avatar-container right-menu-item hover-effect" trigger="click">
+        <!-- 头像 -->
+        <div class="avatar-wrapper">
+          <img :src="user.avatar" class="user-avatar" />
+          <svg-icon icon-class="caret-down" class="el-icon-caret-bottom" />
+        </div>
+        <!-- 选项 -->
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item command="setLayout">
+              <span>布局设置</span>
+            </el-dropdown-item>
+            <el-dropdown-item divided command="logout">
+              <span>退出登录</span>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </div>
 </template>
@@ -27,11 +53,39 @@ import Breadcrumb from "@/components/Breadcrumd/index.vue";
 import Password from "@/components/Password/index.vue";
 import { computed } from "vue";
 import useStore from "@/store";
+import ScreenFull from "@/components/ScreenFull/index.vue";
+import SizeSelect from "@/components/SizeSelect/index.vue";
+import { messageConfirm } from "@/utils/modal";
 
-const { app } = useStore();
+const { app, user } = useStore();
 const device = computed(() => app.device);
 const openHome = () => {
   window.open("https://www.ttkwsd.top");
+};
+const handleCommand = (command: string) => {
+  switch (command) {
+    case "setLayout":
+      setLayout();
+      break;
+    case "logout":
+      logout();
+      break;
+    default:
+      break;
+  }
+};
+const logout = () => {
+  messageConfirm("确定注销并退出系统吗？")
+    .then(() => {
+      user.Logout().then(() => {
+        location.href = "/login";
+      });
+    })
+    .catch(() => {});
+};
+const emits = defineEmits(["setLayout"]);
+const setLayout = () => {
+  emits("setLayout");
 };
 </script>
 

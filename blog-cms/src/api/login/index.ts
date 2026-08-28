@@ -16,3 +16,13 @@ export const login = (data: LoginForm): AxiosPromise<Result<string>> => {
     data,
   });
 };
+
+/**
+ * 用户退出
+ */
+export const logout = (): AxiosPromise<Result<null>> => {
+  return requests({
+    url: "/logout",
+    method: "GET",
+  });
+};

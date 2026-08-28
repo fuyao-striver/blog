@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 import type { UserState } from "../interface";
 import type { LoginForm } from "@/api/login/type";
-import { setToken } from "@/utils/token";
-import { login } from "@/api/login";
+import { removeToken, setToken } from "@/utils/token";
+import { login, logout } from "@/api/login";
 import { getUserInfo } from "@/api/user";
 
 const useUserStore = defineStore("useUserStore", {
@@ -39,6 +39,22 @@ const useUserStore = defineStore("useUserStore", {
               ((this.roleList = data.data.roleList), (this.permissionList = data.data.permissionList));
             }
             resolve(data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    Logout() {
+      return new Promise((resolve, reject) => {
+        logout()
+          .then(() => {
+            this.id = null;
+            this.avatar = "";
+            this.roleList = [];
+            this.permissionList = [];
+            removeToken();
+            resolve(null);
           })
           .catch((error) => {
             reject(error);
