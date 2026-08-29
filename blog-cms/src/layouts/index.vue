@@ -8,10 +8,10 @@
       <nav-bar @setLayout="setLayout" />
       <!-- 历史标签栏 -->
       <tag-view v-if="needTagView" />
+      <app-main />
+      <!-- 设置 -->
+      <settings ref="settingRef" />
     </div>
-    <app-main />
-    <!-- 设置 -->
-    <settings ref="settingRef" />
   </div>
 </template>
 
