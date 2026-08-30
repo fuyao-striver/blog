@@ -73,6 +73,39 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
+      <!-- 作者信息 -->
+      <el-tab-pane label="author">
+        <template #label>
+          <svg-icon class="custom-tabs-label" icon-class="flag" />
+          <span>作者信息</span>
+        </template>
+        <el-form label-width="80px" :model="siteConfig" label-position="left">
+          <el-form-item label="作者头像">
+            <el-upload
+              class="avatar-uploader"
+              :headers="authorization"
+              action="/api/admin/site/upload"
+              :show-file-list="false"
+              accept="image/*"
+              :before-upload="beforeUpload"
+              :on-success="handleAuthorAvatarSuccess"
+            >
+              <img v-if="siteConfig.authorAvatar" :src="siteConfig.authorAvatar" class="avatar" alt="avatar" />
+              <svg-icon v-else class="avatar-uploader-icon" icon-class="plus" />
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="网站作者">
+            <el-input v-model="siteConfig.siteAuthor" style="width: 400px" />
+          </el-form-item>
+          <el-form-item label="关于我">
+            <!--md编辑器-->
+            <md-editor v-model="siteConfig.aboutMe" height="400px" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click.prevent="handleUpdate">保 存</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -93,6 +126,10 @@ const authorization = computed(() => ({
 
 const handleArticleSuccess = (response: AxiosResponse) => {
   siteConfig.value.articleCover = response.data;
+};
+
+const handleAuthorAvatarSuccess = (response: AxiosResponse) => {
+  siteConfig.value.authorAvatar = response.data;
 };
 const beforeUpload = (rawFile: UploadRawFile) => {
   return new Promise((resolve) => {

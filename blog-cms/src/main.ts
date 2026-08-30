@@ -9,6 +9,10 @@ import router from "./router";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import "virtual:svg-icons-register";
 
+// 引入md
+import { MdEditor } from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
+
 import "@/permission";
 
 const app = createApp(App);
@@ -16,4 +20,5 @@ const app = createApp(App);
 app.use(createPinia());
 app.use(router);
 app.component("svg-icon", SvgIcon);
+app.component("md-editor", MdEditor);
 app.mount("#app");
