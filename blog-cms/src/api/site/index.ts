@@ -10,6 +10,6 @@ import requests from "@/utils/request";
 export const getSiteConfig = (): AxiosPromise<Result<SiteConfig>> => {
   return requests({
     url: "/admin/site/list",
-    method:"GET"
-   })
- }
+    method: "GET",
+  });
+};

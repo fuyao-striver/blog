@@ -20,6 +20,26 @@ export const constantRouters: RouteRecordRaw[] = [
   {
     path: "",
     component: Layouts,
+    redirect: "/index",
+    children: [
+      {
+        path: "/index",
+        component: () => import("@/views/home/index.vue"),
+        name: "Index",
+        meta: { title: "首页", icon: "dashboard", affix: true },
+      },
+    ],
+  },
+  {
+    path: "/redirect",
+    component: Layouts,
+    meta: { hidden: true },
+    children: [
+      {
+        path: "/redirect/:path(.*)",
+        component: () => import("@/views/redirect/index.vue"),
+      },
+    ],
   },
 ];
 

@@ -113,14 +113,14 @@ const handleUpdate = () => {
 };
 
 const getList = () => {
-  getSiteConfig().then((({ data }) => {
+  getSiteConfig().then(({ data }) => {
     siteConfig.value = data.data;
-  }))
+  });
 };
 
 onMounted(() => {
-  getList()
-})
+  getList();
+});
 </script>
 
 <style lang="scss" scoped>
