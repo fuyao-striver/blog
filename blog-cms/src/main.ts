@@ -5,6 +5,7 @@ import { createPinia } from "pinia";
 
 import App from "./App.vue";
 import router from "./router";
+import RightToolBar from "@/components/RightToolBar/index.vue";
 // 自定义svg插件
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import "virtual:svg-icons-register";
@@ -21,4 +22,5 @@ app.use(createPinia());
 app.use(router);
 app.component("svg-icon", SvgIcon);
 app.component("md-editor", MdEditor);
+app.component("RightToolBar", RightToolBar);
 app.mount("#app");

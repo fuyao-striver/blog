@@ -10,8 +10,6 @@ export interface FriendQuery extends PageQuery {
   keyword?: string;
 }
 
-
-
 /**
  * 友链
  */
@@ -74,4 +72,3 @@ export interface FriendForm {
    */
   introduction: string;
 }
-
